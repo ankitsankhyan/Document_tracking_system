@@ -31,8 +31,31 @@ module.exports.createUser = async(req, res)=>{
 module.exports.updateCredentials = async(req,res)=>{
     try{
         const id = req.params.id;
-        const {name,email} = req.body;
-        const updateduser = await User.findByIdAndUpdate(id, {name,email});
+        const {name,email,password} = req.body;
+        const user = await User.find({email});
+        if(user.length === 0 ){
+            res.status(200).json({
+                message:'User does not exist'
+            });
+            return;
+        }
+        const status = await bcrypt.compare(password, user[0].password);
+        if(status){
+            user[0].name = name;
+            user[0].email = email;
+            user[0].save();
+            res.status(200).json({
+                message:'User updated successfully',
+                data:{
+                    name:user[0].name,
+                    email:user[0].email,
+                    designation:user[0].designation
+
+                }
+            });
+            return;
+        }
+       
     }catch(err){
         console.log(err);
     }
@@ -42,20 +65,38 @@ module.exports.updateCredentials = async(req,res)=>{
     })
 }
 
+
+
 module.exports.updatePassword = async(req, res) => {
     try{
-        const id = req.params.id;
-                const {password} = req.body;
-                const updateduser = await User.findByIdAndUpdate(id, {password});
+    
+        const {email, password} = req.body;
+        console.log(email);
+        const user = await User.find({email});
+        if(user.length === 0 ){
+            res.status(200).json({
+                message:'User does not exist'
+            });
+            return;
+        }
+
+        
+             user[0].password = password;
+            await user[0].save();
+
+            res.status(200).json({
+                message:"password updated successfully"
+            })
+                       
     }catch(err){
         console.log(err);
     }
 
-    req.status(200).json({
-        message:"password updated successfully"
-    })
+ 
 };
-// 
+
+
+// login function
 module.exports.login = async(req, res) => {
     console.log('running');
     console.log(req.body);
@@ -75,7 +116,7 @@ module.exports.login = async(req, res) => {
 
 
     
-     console.log(password ,user[0].password );
+ 
     //  this compare function is comparing the password entered by user and the hashed password stored in database
     
     // status is a boolean value
