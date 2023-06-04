@@ -1,8 +1,8 @@
 const express = require('express');
 const app = express();
 const routes = require('./router/index');
-const db = require('./config/db');
-db();
+const db = require('./config/localdb');
+
 // Parse JSON bodies
 app.use(express.json());
 
@@ -16,3 +16,7 @@ const port = 8000;
 app.listen(port,()=>{
     console.log(`Server is running on port ${port}`);
 })
+// q:adding remote link to this project
+// q: git push 
+
+
