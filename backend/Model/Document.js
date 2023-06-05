@@ -3,7 +3,7 @@ const User = require('./user');
 var data = new mongoose.Schema({
     title:{
         type:String,
-        required:true
+        require:true
     },
     description:{
         type:String,

@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
-const user = require('user');
-const document = require('document');
+const user = require('./user');
+const document = require('./Document');
 const Tag = new mongoose.Schema({
     tagged_from:{
             type: mongoose.Schema.Types.ObjectId,
@@ -24,6 +24,6 @@ const Tag = new mongoose.Schema({
     }
 )
 
-var tag = mongoose.Model('Tag',Tag);
+var tag = mongoose.model('Tag',Tag);
 
 module.exports = tag;
