@@ -1,8 +1,23 @@
 const Tag = require('../Model/Tag');
 const Document = require('../Model/Document');
+const User = require('../Model/user');
 module.exports.addTag = async(req, res)=>{
     try{
         const{user_id, document_id} = req.body;
+        const document  = await Document.findbyId(id);
+        const currentDate = new Date();
+
+        const date = currentDate.toLocaleDateString();
+
+
+        const time = currentDate.toLocaleTimeString();
+        const user =await User.findById(user_id);
+        document.timeline.push({
+            user:user,
+            date:date,
+            time:time,
+        });
+
         const tag = await Tag.create({user_id, document_id});
         res.status(200).json({
             data:tag
