@@ -7,6 +7,7 @@ const User = require('../Model/user');
 
 module.exports.addState = async(req, res)=>{
   // state will be created by dispatcher only
+  // user id and document id will be passed in the body using form
       try{
         const {user_id,document_id} = req.body;
         const user = await User.findById(user_id);
@@ -23,13 +24,10 @@ module.exports.addState = async(req, res)=>{
             })
             return;
           }
-        const newState = await State.findOne({
-            user_id,
-            document_id
-        });
+   
 
-        if(!newState){
-            newState = await State.create({
+    
+           const newState = await State.create({
                 user_id,
                 document_id,
                 received:'false',
@@ -42,19 +40,16 @@ module.exports.addState = async(req, res)=>{
               });
 
 
-        }else{
-            res.status(200).send({
-                message:'state already exists'
-            })
+        }catch(err){
+          console.log(err);
         }
+        
        
-      }catch(err){
-        console.log(err);
       }
 
 
-      
-}
+  
+
 
 
 // delete a state

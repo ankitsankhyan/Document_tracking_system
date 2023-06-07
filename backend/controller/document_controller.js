@@ -133,7 +133,7 @@ module.exports.approveDoc = async (req, res) => {
 
 
 module.exports.searchDoc = async (req, res) => {
-  const keyword = req.query.keyword;
+  const keyword = req.params.id;
 
   try {
     const documents = await Document.find({ 

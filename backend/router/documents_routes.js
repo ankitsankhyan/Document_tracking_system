@@ -9,7 +9,9 @@ router.get('/show/:id',document_controller.showAllDocs);
 router.delete('/delete/:id',document_controller.deleteDoc);
 // update document route
 router.put('/update',document_controller.updateDoc);
-
-
+// approve document route
 router.get('/approved/:id',document_controller.approveDoc);
+// search doc route
+router.get('/search/:id',document_controller.searchDoc);
+
 module.exports = router;
