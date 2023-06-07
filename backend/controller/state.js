@@ -114,10 +114,11 @@ module.exports.task_done = async(req, res)=>{
             tag:tags
           });
     }catch(e){
-
+        console.log(e);
     }
     
 }
+
 
 
 module.exports.get_status = async(req, res)=>{

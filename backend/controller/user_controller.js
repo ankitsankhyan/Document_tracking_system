@@ -1,11 +1,14 @@
 const User = require('../Model/user');
 const bcrypt = require('bcryptjs');
+const rsa = require('node-rsa');
 const generateToken = require('../config/generateToken');
 module.exports.createUser = async(req, res)=>{
   
    
    
     try{
+        const key = new rsa().generateKeyPair();
+       
         const {name,email, password,designation} = req.body;
         const user = await User.findOne({email:email});
      
@@ -15,7 +18,10 @@ module.exports.createUser = async(req, res)=>{
             });
             return;
         }
-        const newUser = await User.create({name:name,email:email,password:password,designation:designation});
+
+        const public_key = key.exportKey('public');
+        const private_key = key.exportKey('private');
+        const newUser = await User.create({name:name,email:email,password:password,designation:designation,public_key:public_key,private_key:private_key});
         console.log(newUser);
   
     res.status(200).json({

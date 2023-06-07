@@ -1,7 +1,8 @@
 const document = require("../Model/Document");
 const Document = require("../Model/Document");
 const Tag  = require("../Model/Tag");
-const User = require("../Model/user.js")
+const User = require("../Model/user.js");
+const rsa = require('node-rsa');
 module.exports.createdoc = async (req, res) => {
  
   // this is id of user who is creating document
@@ -155,3 +156,34 @@ module.exports.searchDoc = async (req, res) => {
   }
 };
 
+module.exports.signature = async (req,res)=>{
+  // implimented by query 
+  const user_id = req.query.user_id;
+  const doc_id = req.query.doc_id;
+
+  try{
+    const user = await User.findById(user_id);
+    const doc = await Document.findById(doc_id);
+    if(!user || !doc_id){
+      res.status(400).json({
+        message:'user or doc not found'
+      });
+      return;
+    }
+    
+    const email = user.email;
+    const private_key = new rsa();
+    private_key.importKey(user.private_key);
+    const signature = private_key.sign(email,'base64','utf8');
+    doc.signature.push(signature);
+    doc.save();
+    res.status(200).json({
+      message:'signature added'
+    })
+
+  }catch(e){
+
+   console.log(e);
+  }
+
+}
