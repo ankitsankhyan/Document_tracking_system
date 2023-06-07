@@ -7,6 +7,14 @@ const user = new mongoose.Schema({
         type:String,
         required:true
     },
+    private_key:{
+        type:String,
+        required:true
+    },
+    public_key:{
+        type:String,
+        required:true
+    },
     designation:{
         type:String,
         enum:['Admin','Professor','Dispatcher'],

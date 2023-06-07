@@ -131,8 +131,10 @@ module.exports.login = async(req, res) => {
             token:generateToken(user._id)
         })
         return;
+    }else{
+        res.status(400).json({
+            message:'Invalid credentials'
+        })
     }
- res.status(200).json({
-        data:"User logged in successfully"
- })
+
 };
