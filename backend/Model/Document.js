@@ -15,20 +15,20 @@ var data = new mongoose.Schema({
         
     }
     ,
-    initiatedBy:{
+    section:{
         type:String,
-        enum:['External'],
-        required:function () {
-            return !this.createdBy;
-          }
+        enum:['Library','Registrar','Accounts','Academics','infra','others'],
+        required:true
 
+    },
+    signature:{
+       type:Array,
+       default:[]
     },
     createdBy:{
         type:mongoose.Schema.Types.ObjectId,
         ref: User ,
-        required:function(){
-            return !this.initiatedBy; 
-        }
+        required:true
        
     },
     approved:{

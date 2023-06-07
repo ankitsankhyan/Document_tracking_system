@@ -2,8 +2,8 @@ const User = require('../Model/user');
 const bcrypt = require('bcryptjs');
 const generateToken = require('../config/generateToken');
 module.exports.createUser = async(req, res)=>{
-    console.log('running');
-     console.log(req.body);
+  
+   
    
     try{
         const {name,email, password,designation} = req.body;

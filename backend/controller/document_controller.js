@@ -3,14 +3,15 @@ const Document = require("../Model/Document");
 const Tag  = require("../Model/Tag");
 const User = require("../Model/user.js")
 module.exports.createdoc = async (req, res) => {
-  const title = req.body.title;
-  console.log(title);
-
+ 
   // this is id of user who is creating document
 
   const id = req.body.id;
   const description = req.body.description;
+  const title = req.body.title;
+  const section = req.body.section;  // this is section of document
   // check if user is valid
+
   console.log(req.body)
 
     const user = await User.findById(id);
@@ -28,6 +29,7 @@ module.exports.createdoc = async (req, res) => {
   const newDoc = await Document.create({
     title: title,
     createdBy: id,
+    section: section,
     description,
   });
   res.status(200).json({
@@ -42,7 +44,7 @@ module.exports.showAllDocs = async (req, res) => {
   const id = req.params.id;
   
   const docs = await Document.find({createdBy:id}).populate('createdBy');
-
+  
   res.status(200).json({
     data: docs,
   });
