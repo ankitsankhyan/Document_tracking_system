@@ -41,9 +41,9 @@ module.exports.createdoc = async (req, res) => {
 
 module.exports.showAllDocs = async (req, res) => {
  try{
-  const id = req.params.id;
-  
-  const docs = await Document.find({createdBy:id}).populate('createdBy');
+  const id = req.query.id;
+  const section = req.query.section;
+  const docs = await Document.find({createdBy:id, section:section}).populate('createdBy');
   
   res.status(200).json({
     data: docs,
