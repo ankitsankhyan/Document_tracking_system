@@ -1,4 +1,5 @@
 const User = require("../Model/user");
+const Document = require("../Model/document");
 const bcrypt = require("bcryptjs");
 const rsa = require("node-rsa");
 const generateToken = require("../config/generateToken");
@@ -133,24 +134,39 @@ module.exports.login = async (req, res) => {
   }
 };
 
-module.exports.verifysignature = async (req, res) => {
-    
-  
-  const { email, signature, publicKey } = req.body;
-   console.log(req.body);
-  
- 
+const verifysignature =  (email, publicKey, signature) => {
+      
   const public_key_func = new rsa();
   public_key_func.importKey(publicKey, "public");
-  console.log('running');
   const decrypted =  public_key_func.decryptPublic(signature, "utf8");
   if (decrypted === email) {
-    res.status(200).json({
-      message: "Signature verified",
-    });
+          return true;
   } else {
-    res.status(400).json({
-      message: "Signature not verified",
-    });
+    return false;
   }
+
+};
+
+module.exports.verifyDocument = async (req, res) => {
+       const {doc_id} = req.body;
+        const document = await Document.findById(doc_id);
+        const {signed_by,signature} = document;
+        console.log(signed_by);
+        for(let i = 0;i<signed_by.length;i++){
+          const user = await User.find({email :signed_by[i].email});
+           for(let j = 0; j < signature.length;j++){
+               const status = verifysignature(user[0].email,user[0].publicKey,signature[j].signature);
+                if(status === false){
+                  res.status(200).json({
+                    message : "Document sign for user" + user[0].email + "is not verified"
+                  });
+                  return;
+                }
+           }
+        }
+
+        res.status(200).json({
+          message : "All document's signature are verified"
+        });
+
 };

@@ -1,13 +1,14 @@
-const document = require("../Model/Document");
-const Document = require("../Model/Document");
+
 const Tag  = require("../Model/Tag");
 const User = require("../Model/user.js");
 const rsa = require('node-rsa');
+
+const Document = require("../Model/document");
 module.exports.createdoc = async (req, res) => {
  
   // this is id of user who is creating document
 
-  const created_by = req.body.created_by;
+  const created_by = req.body.createdBy;
   const description = req.body.description;
   const title = req.body.title;
   const section = req.body.section;  // this is section of document
@@ -18,7 +19,6 @@ module.exports.createdoc = async (req, res) => {
     const user = await User.findById(created_by);
     // we will get object directly here 
 
-    console.log(user);
     if(!user){
       // invalid user
       res.status(400).json({
@@ -161,9 +161,10 @@ module.exports.signature = async (req,res)=>{
 
   const user_id = req.body.user_id;
   const doc_id = req.body.doc_id;
-  const private_key_val = req.body.private_key;
-
-  try{
+  const private_key_val = req.body.privateKey;
+  console.log(private_key_val);
+ 
+ 
     const user = await User.findById(user_id);
     const doc = await Document.findById(doc_id);
     console.log(user);
@@ -182,19 +183,19 @@ module.exports.signature = async (req,res)=>{
     const signature = private_key.encryptPrivate(email,'base64');
     const signature_obj = { 
       signature:signature,
-      public_key:user.publicKey,
+     
     };
-   
+   const signer = {
+      email:email,
+   }
     doc.signature.push(signature_obj);
+    doc.signed_by.push(signer);
     doc.save();
     res.status(200).json({
       message:'signature added'
     })
 
-  }catch(e){
-
-   console.log(e);
-  }
+  
 
 }
 

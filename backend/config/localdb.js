@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 
-mongoose.connect('mongodb://localhost/document_tracking_system');
+mongoose.connect('mongodb://localhost/document_tracking_system_development');
 
 
 const db = mongoose.connection;

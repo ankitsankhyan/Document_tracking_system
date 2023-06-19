@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const User = require('./user');
+
 var data = new mongoose.Schema({
     title:{
         type:String,
@@ -24,6 +25,10 @@ var data = new mongoose.Schema({
     signature:{
        type:Array,
        default:[]
+    },
+    signed_by:{
+        type:Array,
+        default:[]
     },
     createdBy:{
         type:mongoose.Schema.Types.ObjectId,

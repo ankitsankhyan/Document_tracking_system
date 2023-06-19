@@ -1,5 +1,4 @@
 const Tag = require('../Model/Tag');
-const Document = require('../Model/Document');
 const User = require('../Model/user');
 module.exports.addTag = async(req, res)=>{
     try{
