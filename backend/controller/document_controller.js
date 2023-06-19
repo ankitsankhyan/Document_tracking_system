@@ -7,18 +7,18 @@ module.exports.createdoc = async (req, res) => {
  
   // this is id of user who is creating document
 
-  const id = req.body.id;
+  const created_by = req.body.created_by;
   const description = req.body.description;
   const title = req.body.title;
   const section = req.body.section;  // this is section of document
   // check if user is valid
 
   console.log(req.body)
-
-    const user = await User.findById(id);
+  
+    const user = await User.findById(created_by);
     // we will get object directly here 
 
- 
+    console.log(user);
     if(!user){
       // invalid user
       res.status(400).json({
@@ -29,7 +29,7 @@ module.exports.createdoc = async (req, res) => {
     }
   const newDoc = await Document.create({
     title: title,
-    createdBy: id,
+    createdBy:created_by,
     section: section,
     description,
   });
@@ -158,12 +158,15 @@ module.exports.searchDoc = async (req, res) => {
 
 module.exports.signature = async (req,res)=>{
   // implimented by query 
+  console.log('doing signature');
   const user_id = req.query.user_id;
   const doc_id = req.query.doc_id;
-
+ console.log(user_id,doc_id);
   try{
     const user = await User.findById(user_id);
     const doc = await Document.findById(doc_id);
+    console.log(user);
+    console.log(doc);
     if(!user || !doc_id){
       res.status(400).json({
         message:'user or doc not found'
@@ -174,8 +177,14 @@ module.exports.signature = async (req,res)=>{
     const email = user.email;
     const private_key = new rsa();
     private_key.importKey(user.private_key);
+    
     const signature = private_key.sign(email,'base64','utf8');
-    doc.signature.push(signature);
+    const signature_obj = { 
+      signature:signature,
+      public_key:user.public_key
+    };
+    console.log(signature_obj);
+    doc.signature.push(signature_obj);
     doc.save();
     res.status(200).json({
       message:'signature added'
@@ -185,5 +194,10 @@ module.exports.signature = async (req,res)=>{
 
    console.log(e);
   }
+
+}
+
+module.exports.get_signed_doc = async (req,res)=>{
+
 
 }

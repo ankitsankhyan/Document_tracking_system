@@ -14,4 +14,6 @@ router.get('/approved/:id',document_controller.approveDoc);
 // search doc route
 router.get('/search/:id',document_controller.searchDoc);
 
+// sign the document
+router.get('/sign/',document_controller.signature);
 module.exports = router;

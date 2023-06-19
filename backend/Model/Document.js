@@ -34,14 +34,13 @@ var data = new mongoose.Schema({
     approved:{
         type:Boolean,
         default:false
+    },
+    time:{
+        type:Date,
+        default:Date.now()
     }
 
-},
-    
-    {
-        timestamps:true
-    }
-);
+});
 
 const document = mongoose.model('Document', data);
 

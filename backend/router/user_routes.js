@@ -6,4 +6,5 @@ router.post('/updateCredentials', UsersFuctions.updateCredentials);
 router.post('/updatePassword', UsersFuctions.updatePassword);
 router.post('/createUser', UsersFuctions.createUser);
 router.get('/login', UsersFuctions.login);
+router.get('/verify', UsersFuctions.verifysignature);
 module.exports = router;
