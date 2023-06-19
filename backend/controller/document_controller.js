@@ -158,10 +158,11 @@ module.exports.searchDoc = async (req, res) => {
 
 module.exports.signature = async (req,res)=>{
   // implimented by query 
-  console.log('doing signature');
-  const user_id = req.query.user_id;
-  const doc_id = req.query.doc_id;
- console.log(user_id,doc_id);
+
+  const user_id = req.body.user_id;
+  const doc_id = req.body.doc_id;
+  const private_key_val = req.body.private_key;
+
   try{
     const user = await User.findById(user_id);
     const doc = await Document.findById(doc_id);
@@ -176,14 +177,14 @@ module.exports.signature = async (req,res)=>{
     
     const email = user.email;
     const private_key = new rsa();
-    private_key.importKey(user.private_key);
+    private_key.importKey(private_key_val,'private');
     
-    const signature = private_key.sign(email,'base64','utf8');
+    const signature = private_key.encryptPrivate(email,'base64');
     const signature_obj = { 
       signature:signature,
-      public_key:user.public_key
+      public_key:user.publicKey,
     };
-    console.log(signature_obj);
+   
     doc.signature.push(signature_obj);
     doc.save();
     res.status(200).json({
