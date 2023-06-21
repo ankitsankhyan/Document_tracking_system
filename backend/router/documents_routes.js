@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const {protect} = require('../middleware/authenticaion')
 const document_controller = require('../controller/document_controller');
 router.get('/',(req,res)=>{
     res.send('hello working fine');

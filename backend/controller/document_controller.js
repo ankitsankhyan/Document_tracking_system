@@ -137,14 +137,17 @@ module.exports.approveDoc = async (req, res) => {
 
 module.exports.searchDoc = async (req, res) => {
   const keyword = req.params.id;
-
+  const section = req.user.section;
   try {
     const documents = await Document.find({ 
       $or: [
         { title: { $regex: keyword, $options: 'i' } },
-        { description: { $regex: keyword, $options: 'i' } }
-      ]
+        { description: { $regex: keyword, $options: 'i' },
+      }
+      ],
+      section:section
     });
+
 
     res.status(200).json({
       data: documents

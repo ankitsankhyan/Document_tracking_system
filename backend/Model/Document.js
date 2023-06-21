@@ -10,6 +10,7 @@ var data = new mongoose.Schema({
         type:String,
         
     },
+
     timeline:{
         type: Array,
         default: []
@@ -18,10 +19,11 @@ var data = new mongoose.Schema({
     ,
     section:{
         type:String,
-        enum:['Library','Registrar','Accounts','Academics','infra','others'],
+        enum:['Library','Registrar','Accounts','Academics','infra','Public', 'Personal'],
         required:true
 
     },
+   
     signature:{
        type:Array,
        default:[]
@@ -30,6 +32,7 @@ var data = new mongoose.Schema({
         type:Array,
         default:[]
     },
+ 
     createdBy:{
         type:mongoose.Schema.Types.ObjectId,
         ref: User ,

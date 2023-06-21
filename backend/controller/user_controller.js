@@ -5,10 +5,10 @@ const rsa = require("node-rsa");
 const generateToken = require("../config/generateToken");
 const NodeRSA = require("node-rsa");
 module.exports.createUser = async (req, res) => {
-  try {
-    const key = new rsa().generateKeyPair();
+ 
+  
     console.log(req.body);
-    const { name, email, password, designation } = req.body;
+    const { name, email, password, designation,section } = req.body;
     const user = await User.findOne({ email: email });
     console.log(user);
     if (user) {
@@ -18,31 +18,34 @@ module.exports.createUser = async (req, res) => {
       return;
     }
 
-    const public_key = key.exportKey("public");
-    const private_key = key.exportKey("private");
+ 
   
             const newUser = await User.create({
                                                 name: name,
                                                 email: email,
                                                 password: password,
                                                 designation: designation,
-                                                publicKey: public_key,
+                                                section: section,
+                                             
             });
 
     res.status(200).json({
       data: newUser,
-      private_key: private_key,
-      message: "Please Store the private key in a safe place",
     });
-  } catch (e) {
-    console.log(e);
-  }
+  
 };
 
 module.exports.updateCredentials = async (req, res) => {
-  try {
-    const id = req.params.id;
-    const { name, email, password } = req.body;
+ 
+  
+    const { name, email, password, designation,section } = req.body;
+    console.log(req.body);
+    if(req.user.email !== email){
+      res.status(401).json({
+        message: "You are not authorized to update this user",
+      });
+      return;
+    }
     const user = await User.find({ email });
     if (user.length === 0) {
       res.status(200).json({
@@ -54,6 +57,8 @@ module.exports.updateCredentials = async (req, res) => {
     if (status) {
       user[0].name = name;
       user[0].email = email;
+      user[0].designation = designation;
+      user[0].section = section;
       user[0].save();
       res.status(200).json({
         message: "User updated successfully",
@@ -61,13 +66,13 @@ module.exports.updateCredentials = async (req, res) => {
           name: user[0].name,
           email: user[0].email,
           designation: user[0].designation,
+          section:user[0].section,
         },
       });
       return;
     }
-  } catch (err) {
-    console.log(err);
-  }
+ 
+  
 
   res.status(200).json({
     data: updateduser,
@@ -99,13 +104,13 @@ module.exports.updatePassword = async (req, res) => {
 
 // login function
 module.exports.login = async (req, res) => {
-  console.log("running");
+
   console.log(req.body);
   const { email, password } = req.body;
-
+console.log(email);
   const user = await User.find({ email });
   //  user is an array of objects
-
+  console.log(user);
   if (user.length === 0) {
     console.log("user does not exist");
     res.status(200).json({
@@ -118,13 +123,14 @@ module.exports.login = async (req, res) => {
 
   // status is a boolean value
   const status = await bcrypt.compare(password, user[0].password);
+  console.log(user[0]._id, user[0].id);
   if (status) {
     console.log("user logged in successfully");
     res.status(200).json({
       name: user[0].name,
       email: user[0].email,
       designation: user[0].designation,
-      token: generateToken(user._id),
+      token: generateToken(user[0].id),
     });
     return;
   } else {
@@ -169,4 +175,36 @@ module.exports.verifyDocument = async (req, res) => {
           message : "All document's signature are verified"
         });
 
+};
+
+module.exports.generatePublicKey = async (req, res) => {
+        const {email} =  req.user;
+        const {password} = req.body;
+       
+        const originalUser = await User.findOne({email : email});
+        const isMatch = await bcrypt.compare(password,originalUser.password);
+        if(!isMatch){
+          res.status(200).json({
+            message : "Password is not correct"
+          });
+          return;
+          
+        }
+        if(originalUser.hasPrivateKey === true){
+          res.status(200).json({
+            message : "Public key is already generated"
+          });
+          return;
+        }
+        const key = new rsa().generateKeyPair();
+        const public_key = key.exportKey("public");
+        const private_key = key.exportKey("private");
+        originalUser.publicKey = public_key;
+        originalUser.hasPrivateKey = true;
+        await originalUser.save();
+        res.status(200).json({
+          private_key : private_key,
+          message : "Please Store the private key in a safe place"
+        });
+         
 };

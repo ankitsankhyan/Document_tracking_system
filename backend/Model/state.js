@@ -19,9 +19,13 @@ const state_schema = new mongoose.Schema({
     done:{
         type: Boolean,
         default: false
-    }},{
-        timestamps:true
-    })
+    },
+   time:{
+       type: Date,
+       default: new Date()
+    
+   }
+})
 
 const State = mongoose.Model('State', state_schema);
 

@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const User = require("../Model/user");
-const asyncHandler = require("express-async-handler");
+
 
 const protect = async(req, res, next) => {
   let token;
@@ -10,14 +10,17 @@ const protect = async(req, res, next) => {
     req.headers.authorization.startsWith("Bearer")
   ) {
     try {
+      console.log(req.headers.authorization, 'is req.headers.authorization');
       token = req.headers.authorization.split(" ")[1];
-
+   
       //decodes token id
-       console.log(token, 'is token');
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+     
+      const decoded = jwt.verify(token, 'docuemnt-tracking-system');
 // this means that user is searched in data
-      req.user = await User.findById(decoded.id).select("-password");
-
+   
+      const loggedin = await User.findById(decoded.id).select("-password");
+    
+       req.user = loggedin;
       next();
     } catch (error) {
       res.status(401);

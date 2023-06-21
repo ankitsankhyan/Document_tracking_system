@@ -5,6 +5,8 @@ require('express-async-errors');
 const routes = require('./router/index');
 const db = require('./config/localdb');
 const morgan = require('morgan');
+const cors = require('cors');
+
 // Parse JSON bodies
 app.use(express.json());
 
@@ -19,7 +21,6 @@ app.use((err, req, res, next) => {
 });
 app.use('/',routes);
 const port = 8000;
-
 
 
 app.listen(port,()=>{

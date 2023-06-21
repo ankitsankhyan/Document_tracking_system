@@ -19,9 +19,10 @@ const Tag = new mongoose.Schema({
     seen:{
         type: Boolean,
         default: false
-    }},{
-        timestamps:true
-    }
+    },
+    time:{
+
+}}
 )
 
 var tag = mongoose.model('Tag',Tag);
