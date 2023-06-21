@@ -5,36 +5,43 @@ const rsa = require('node-rsa');
 
 const Document = require("../Model/document");
 module.exports.createdoc = async (req, res) => {
- 
-  // this is id of user who is creating document
-
-  const created_by = req.body.createdBy;
   const description = req.body.description;
   const title = req.body.title;
   const section = req.body.section;  // this is section of document
   // check if user is valid
 
-  console.log(req.body)
-  
+  const created_by = req.user.id;
     const user = await User.findById(created_by);
-    // we will get object directly here 
-
+    // we will get object directly here
     if(!user){
-      // invalid user
       res.status(400).json({
         message:'not a valid user as user is not found in database'
       })
-
       return;
     }
+   const Dispatchers = await User.find({designation:'Dispatcher'});
+  
   const newDoc = await Document.create({
     title: title,
     createdBy:created_by,
     section: section,
     description,
   });
+ let tags = [];
+   for(let i=0;i<Dispatchers.length;i++){
+ const tag =   await Tag.create({
+       tagged_from:created_by,
+        tagged_to:Dispatchers[i].id,
+        document_id:newDoc.id,
+        seen:false
+   });
+   tags.push(tag);
+   }
+
+
   res.status(200).json({
     data: newDoc,
+    tags:tags
   });
  
 };
@@ -205,4 +212,20 @@ module.exports.signature = async (req,res)=>{
 module.exports.get_signed_doc = async (req,res)=>{
 
 
+}
+
+module.exports.tagged_docs = async (req,res)=>{
+  const user_id = req.user.id;
+  const docs = await Tag.find({tagged_to:user_id}).populate('document_id');
+  res.status(200).json({
+    data:docs
+  })
+}
+
+module.exports.created_docs = async (req,res)=>{
+  const user_id = req.user.id;
+  const docs = await Document.find({createdBy:user_id});
+  res.status(200).json({
+    data:docs
+  });
 }

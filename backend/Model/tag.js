@@ -20,9 +20,15 @@ const Tag = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    done:{
+        type: Boolean,
+        default: false
+    },
     time:{
-
-}}
+        type: Date,
+        default: new Date()
+    }
+ }
 )
 
 var tag = mongoose.model('Tag',Tag);

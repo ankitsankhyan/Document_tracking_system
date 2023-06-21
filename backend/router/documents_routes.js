@@ -5,7 +5,9 @@ const document_controller = require('../controller/document_controller');
 router.get('/',(req,res)=>{
     res.send('hello working fine');
 })
-router.post('/create',document_controller.createdoc);
+router.post('/create',protect,document_controller.createdoc);
+router.get('/show_tagged_doc',protect,document_controller.tagged_docs);
+router.get('/show_created_doc', protect,document_controller.created_docs);
 router.get('/show/:id',document_controller.showAllDocs);
 router.delete('/delete/:id',document_controller.deleteDoc);
 // update document route
