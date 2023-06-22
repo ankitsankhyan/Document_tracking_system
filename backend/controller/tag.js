@@ -2,6 +2,7 @@ const Tag = require('../Model/Tag');
 const User = require('../Model/user');
 const Document = require('../Model/document');
 const Authorise = require('../Model/authorize');
+const Assigned = require('../Model/assigned');
 module.exports.addTag = async(req, res)=>{
       
         const{email, document_id} = req.body;
@@ -141,4 +142,24 @@ module.exports.delete_tag = async(req,res)=>{
                 message:'Tag deleted'
             });
 
+}
+
+module.exports.selectRequest = async(req, res)=>{
+   const id = req.params.id;
+   const request = await Assigned.findById(id);
+   request.assigned = true;
+   request.save();
+
+   const rest_requests = await Assigned.find({document_id:request.document_id, assigned:false,senderId:request.senderId});
+   for(let i = 0; i<rest_requests.length; i++){
+         await rest_requests[i].deleteOne();
+   }
+   const tag = await Tag.create({tagged_to:request.dispatcher_id, tagged_from:request.senderId, document_id:request.document_id});
+   const authorise = await Authorise.findOne({user_id:request.dispatcher_id, document_id:request.document_id});
+   if(!authorise){
+         const newAuthorise = await Authorise.create({user_id:request.dispatcher_id, document_id:request.document_id});
+    }
+    res.status(200).json({
+        message:'Request accepted'
+    });
 }

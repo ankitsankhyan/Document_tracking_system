@@ -1,4 +1,4 @@
-
+const Assigned = require('../Model/assigned');
 const Tag  = require("../Model/Tag");
 const User = require("../Model/user.js");
 const rsa = require('node-rsa');
@@ -28,24 +28,21 @@ module.exports.createdoc = async (req, res) => {
     section: section,
     description,
   });
- let tags = [];
+ let requests = [];
    for(let i=0;i<Dispatchers.length;i++){
- const tag =   await Tag.create({
-       tagged_from:created_by,
-        tagged_to:Dispatchers[i].id,
+ const request =   await Assigned.create({
         document_id:newDoc.id,
-        seen:false
+        dispatcher_id:Dispatchers[i].id,
+        senderId:created_by,
+        status:'pending'
    });
-   tags.push(tag);
+   requests.push(request);
    }
-   const authorise = await Authorise.findOne({user_id:req.user.id, document_id:newDoc.id});
-        if(!authorise){
-            const newAuthorise = await Authorise.create({user_id:req.user.id, document_id:newDoc.id});
-        }
+  
 
   res.status(200).json({
     data: newDoc,
-    tags:tags
+    requests:requests
   });
  
 };
@@ -226,12 +223,9 @@ module.exports.signature = async (req,res)=>{
 
   
 
-}
-
-module.exports.get_signed_doc = async (req,res)=>{
+};
 
 
-}
 
 module.exports.tagged_docs = async (req,res)=>{
   const user_id = req.user.id;

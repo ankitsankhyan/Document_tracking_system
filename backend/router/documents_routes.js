@@ -17,7 +17,7 @@ router.get('/show_created_doc', protect,document_controller.created_docs);
 router.patch('/seen:id',protect,tags.mark_as_seen);
 router.post('/newTag',protect,tags.addTag);
 router.patch('/done', protect, tags.mark_as_done);
-router.delete('/delete_tag:id',protect,tags.delete_tag);
+router.delete('/delete_tag',protect,tags.delete_tag);
 router.get('/show:id',document_controller.showAllDocs);
 router.delete('/delete:id',protect,document_controller.deleteDoc);
 // update document route

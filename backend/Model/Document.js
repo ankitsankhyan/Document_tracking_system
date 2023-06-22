@@ -40,7 +40,7 @@ var data = new mongoose.Schema({
        
     },
     approved:{
-        type:Boolean,
+        type:String,
         default:false
     },
     time:{
