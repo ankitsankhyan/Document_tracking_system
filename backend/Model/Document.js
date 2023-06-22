@@ -45,11 +45,26 @@ var data = new mongoose.Schema({
     },
     time:{
         type:Date,
-        default:Date.now()
+        default: new Date()
     }
 
 });
 
+data.methods.isDeletable = function(){
+    const currentTime = new Date();
+    const creationTime = new Date(this.time);
+  
+    const timeDifference = currentTime - creationTime;
+    const oneDayInMillis = 86400000 // 1 day in milliseconds
+    console.log(timeDifference);
+  
+    if (timeDifference > oneDayInMillis) {
+      return false;
+    } else {
+      return true;
+    }
+
+}
 const document = mongoose.model('Document', data);
 
 

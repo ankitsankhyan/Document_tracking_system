@@ -2,14 +2,15 @@
 const Tag  = require("../Model/Tag");
 const User = require("../Model/user.js");
 const rsa = require('node-rsa');
-
+const Authorise = require('../Model/authorize');
 const Document = require("../Model/document");
+const { request } = require("express");
 module.exports.createdoc = async (req, res) => {
   const description = req.body.description;
   const title = req.body.title;
   const section = req.body.section;  // this is section of document
   // check if user is valid
-
+   console.log(req.user);
   const created_by = req.user.id;
     const user = await User.findById(created_by);
     // we will get object directly here
@@ -37,7 +38,10 @@ module.exports.createdoc = async (req, res) => {
    });
    tags.push(tag);
    }
-
+   const authorise = await Authorise.findOne({user_id:req.user.id, document_id:newDoc.id});
+        if(!authorise){
+            const newAuthorise = await Authorise.create({user_id:req.user.id, document_id:newDoc.id});
+        }
 
   res.status(200).json({
     data: newDoc,
@@ -65,24 +69,39 @@ module.exports.showAllDocs = async (req, res) => {
 
 module.exports.deleteDoc = async (req, res) => {
   
-  try{
+  // id of document to be deleted
     const id = req.params.id;
+    console.log(id);  
       const doc = await Document.findById(id);
-   console.log(doc);
+      console.log(doc.isDeletable());
       if(!doc){
         res.status(400).json({
           message:'doc not found'
         });
         return;
       }
+    if(!doc.isDeletable()){
+      res.status(400).json({
+        message:'document is not deletable'
+      });
+      return;
+    }
+       console.log(doc.createdBy, req.user.id);
+      if(doc.createdBy.equals(req.user._id)===false){
+        res.status(400).json({
+          message:'you are not authorized to delete this document'
+        });
+        return;
+      }
+      const tags = await Tag.deleteMany({document_id:id});
+      const authorise = await Authorise.deleteMany({document_id:id});
+  
  
      const deleted_doc = await Document.findByIdAndDelete(id);
   res.status(200).json({
     data: doc,
   });
-  }catch(e){
-    console.log(e);
-  }
+ 
  
 };
 
@@ -223,9 +242,10 @@ module.exports.tagged_docs = async (req,res)=>{
 }
 
 module.exports.created_docs = async (req,res)=>{
-  const user_id = req.user.id;
-  const docs = await Document.find({createdBy:user_id});
+  const docs = await Document.find({createdBy:req.user.id});
   res.status(200).json({
-    data:docs
+    data:docs,
+    message:'success'
   });
 }
+

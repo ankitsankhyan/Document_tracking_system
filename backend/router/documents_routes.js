@@ -2,14 +2,24 @@ const express = require('express');
 const router = express.Router();
 const {protect} = require('../middleware/authenticaion')
 const document_controller = require('../controller/document_controller');
-router.get('/',(req,res)=>{
-    res.send('hello working fine');
-})
+const tags = require('../controller/tag');
+
+router.delete('/',(req,res)=>{
+    res.status(200).json({
+        message:'working fine'
+    })  })
+
+
+
 router.post('/create',protect,document_controller.createdoc);
 router.get('/show_tagged_doc',protect,document_controller.tagged_docs);
 router.get('/show_created_doc', protect,document_controller.created_docs);
-router.get('/show/:id',document_controller.showAllDocs);
-router.delete('/delete/:id',document_controller.deleteDoc);
+router.patch('/seen:id',protect,tags.mark_as_seen);
+router.post('/newTag',protect,tags.addTag);
+router.patch('/done', protect, tags.mark_as_done);
+router.delete('/delete_tag:id',protect,tags.delete_tag);
+router.get('/show:id',document_controller.showAllDocs);
+router.delete('/delete:id',protect,document_controller.deleteDoc);
 // update document route
 router.put('/update',document_controller.updateDoc);
 // approve document route

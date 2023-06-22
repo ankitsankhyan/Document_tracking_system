@@ -7,13 +7,13 @@ const authorization_table =  new mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,
         ref:Users
     },
-    doc_id:{
+    document_id:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:document
+        ref:Document
     }
     
 
 });
 
 
-module.exports = mongoose.Model('authorization_table', authorization_table);
+module.exports = mongoose.model('authorization_table', authorization_table);
