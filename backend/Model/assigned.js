@@ -16,12 +16,15 @@ const assignment_table =  new mongoose.Schema({
         ref:Users
     },
       assigned:{
-        type:boolean,
+        type:Boolean,
         default:false
     }
 
 });
+assignment_table.index({document_id:1,senderId:1,dispatcher_id:1},{unique:true});
+
 
 const assignment = mongoose.model('assignment_table', assignment_table);
+
 
 module.exports = assignment;

@@ -2,6 +2,11 @@ const mongoose = require('mongoose');
 const User = require('./user');
 
 var data = new mongoose.Schema({
+    to:{
+       type:mongoose.Schema.Types.ObjectId,
+         ref: User,
+         required:true
+    },
     title:{
         type:String,
         require:true
@@ -28,11 +33,7 @@ var data = new mongoose.Schema({
        type:Array,
        default:[]
     },
-    signed_by:{
-        type:Array,
-        default:[]
-    },
- 
+
     createdBy:{
         type:mongoose.Schema.Types.ObjectId,
         ref: User ,
@@ -40,8 +41,8 @@ var data = new mongoose.Schema({
        
     },
     approved:{
-        type:String,
-        default:false
+        type:Object,
+        default:{}
     },
     time:{
         type:Date,
@@ -64,6 +65,20 @@ data.methods.isDeletable = function(){
       return true;
     }
 
+}
+
+data.methods.disapprovable = function(){
+    const currentTime = new Date();
+    if(!this.approved){
+        return false;
+    }
+    const creationTime = new Date(this.approved.time);
+    if(currentTime - creationTime > 86400000){
+        return false;
+    }else{
+        return true;
+    }
+   
 }
 const document = mongoose.model('Document', data);
 

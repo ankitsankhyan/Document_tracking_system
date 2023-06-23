@@ -1,6 +1,6 @@
 const express = require('express');
 const UsersFuctions = require('../controller/user_controller');
-console.log(UsersFuctions);
+
 const {protect} = require('../middleware/authenticaion');
 const router = express.Router();
 

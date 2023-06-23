@@ -145,11 +145,17 @@ module.exports.delete_tag = async(req,res)=>{
 }
 
 module.exports.selectRequest = async(req, res)=>{
+    if(req.user.designation !== 'Dispatcher'){
+        res.status(400).json({
+            message:'Only Dispatcher can select request'
+        });
+        return;
+        }
    const id = req.params.id;
    const request = await Assigned.findById(id);
    request.assigned = true;
-   request.save();
-
+   await request.save();
+   console.log(request);
    const rest_requests = await Assigned.find({document_id:request.document_id, assigned:false,senderId:request.senderId});
    for(let i = 0; i<rest_requests.length; i++){
          await rest_requests[i].deleteOne();

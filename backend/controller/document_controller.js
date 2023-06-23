@@ -5,6 +5,10 @@ const rsa = require('node-rsa');
 const Authorise = require('../Model/authorize');
 const Document = require("../Model/document");
 const { request } = require("express");
+
+
+
+// ##############################################document funtions#####################################################
 module.exports.createdoc = async (req, res) => {
   const description = req.body.description;
   const title = req.body.title;
@@ -39,6 +43,10 @@ module.exports.createdoc = async (req, res) => {
    requests.push(request);
    }
   
+  const authorise = await Authorise.create({
+    user_id:created_by,
+    document_id:newDoc.id,
+  });
 
   res.status(200).json({
     data: newDoc,
@@ -66,11 +74,11 @@ module.exports.showAllDocs = async (req, res) => {
 
 module.exports.deleteDoc = async (req, res) => {
   
-  // id of document to be deleted
+ 
     const id = req.params.id;
     console.log(id);  
       const doc = await Document.findById(id);
-      console.log(doc.isDeletable());
+    
       if(!doc){
         res.status(400).json({
           message:'doc not found'
@@ -83,7 +91,9 @@ module.exports.deleteDoc = async (req, res) => {
       });
       return;
     }
-       console.log(doc.createdBy, req.user.id);
+     
+
+       
       if(doc.createdBy.equals(req.user._id)===false){
         res.status(400).json({
           message:'you are not authorized to delete this document'
@@ -92,7 +102,7 @@ module.exports.deleteDoc = async (req, res) => {
       }
       const tags = await Tag.deleteMany({document_id:id});
       const authorise = await Authorise.deleteMany({document_id:id});
-  
+      const assigned = await Assigned.deleteMany({document_id:id});
  
      const deleted_doc = await Document.findByIdAndDelete(id);
   res.status(200).json({
@@ -104,10 +114,7 @@ module.exports.deleteDoc = async (req, res) => {
 
 
 module.exports.updateDoc = async (req, res) => {
-  //   document id
-  // user id
-    
-  try {
+  
     const title = req.body.title;
     console.log(title);
     // this is id of the document
@@ -128,35 +135,38 @@ module.exports.updateDoc = async (req, res) => {
      res.status(200).json({
       data: doc,
      })
-  } catch (e) {
-      console.log(e);
-  }
-
   
 };
 
 
-module.exports.approveDoc = async (req, res) => {
-  try{
-    const id = req.params.id;
-    const doc = await Document.findById(id);
-    if(!doc){
+// ##############################  authorise  ########################################
+
+module.exports.signature = async (req,res)=>{
+  // implimented by query 
+  const doc_id = req.params.id;
+  const private_key_val = req.body.privateKey;
+   
+    const doc = await Document.findById(doc_id);
+    if(!doc_id){
       res.status(400).json({
         message:'doc not found'
-      })
+      });
       return;
     }
-    doc.approved = !doc.approved;
-    doc.save();
+    const private_key = new rsa();
+    private_key.importKey(private_key_val,'private');
+    
+    const signature = private_key.encryptPrivate(req.user.email,'base64');
+    const signature_obj = { 
+      signature:signature,
+      email:req.user.email,
+         };
+    doc.signature.push(signature_obj);
+    await doc.save();
     res.status(200).json({
-      data: doc,
-    });
-  }catch(e){
-    console.log(e);
-  }
- 
+      message:'signature added'
+    })
 };
-
 
 module.exports.searchDoc = async (req, res) => {
   const keyword = req.params.id;
@@ -182,50 +192,33 @@ module.exports.searchDoc = async (req, res) => {
   }
 };
 
-module.exports.signature = async (req,res)=>{
-  // implimented by query 
+module.exports.getAccessDoc = async (req,res)=>{
+  console.log(req.user.id);
+  const doc_id = req.params.id;
+  const user_id = req.user.id;
+  const authorise = await Authorise.findOne({document_id:doc_id,user_id:user_id});
+ 
 
-  const user_id = req.body.user_id;
-  const doc_id = req.body.doc_id;
-  const private_key_val = req.body.privateKey;
-  console.log(private_key_val);
- 
- 
-    const user = await User.findById(user_id);
-    const doc = await Document.findById(doc_id);
-    console.log(user);
-    console.log(doc);
-    if(!user || !doc_id){
-      res.status(400).json({
-        message:'user or doc not found'
-      });
-      return;
-    }
-    
-    const email = user.email;
-    const private_key = new rsa();
-    private_key.importKey(private_key_val,'private');
-    
-    const signature = private_key.encryptPrivate(email,'base64');
-    const signature_obj = { 
-      signature:signature,
-     
-    };
-   const signer = {
-      email:email,
-   }
-    doc.signature.push(signature_obj);
-    doc.signed_by.push(signer);
-    doc.save();
+  const doc = await Document.findById(doc_id);
+  console.log(doc);
+  console.log(authorise);
+  if(doc.section === req.user.section){
     res.status(200).json({
-      message:'signature added'
+      data:doc
     })
-
+    return;
+  }
+  if(authorise){
+    res.status(200).json({
+      data:doc
+    })
+    return;
+  }
+  res.status(400).json({
+    message:'you are not authorised to view this document'
+  });
   
-
 };
-
-
 
 module.exports.tagged_docs = async (req,res)=>{
   const user_id = req.user.id;
@@ -233,7 +226,7 @@ module.exports.tagged_docs = async (req,res)=>{
   res.status(200).json({
     data:docs
   })
-}
+};
 
 module.exports.created_docs = async (req,res)=>{
   const docs = await Document.find({createdBy:req.user.id});
@@ -241,5 +234,132 @@ module.exports.created_docs = async (req,res)=>{
     data:docs,
     message:'success'
   });
-}
+};
 
+module.exports.approveDoc = async (req, res) => {
+  const {doc_id, privateKey} = req.body;
+  const doc = await Document.findById(doc_id);
+  if(doc.to.equals(req.user.id)===false){
+    res.status(400).json({
+      message:'you are not authorised to approve this document'
+    });
+    return;
+      }
+
+  const private_key = new rsa();
+  private_key.importKey(privateKey,'private');
+  const signature = private_key.encryptPrivate(req.user.email,'base64');
+  const signature_obj = {
+    signature:signature,
+    email:req.user.email
+
+  }
+  if(!doc){
+    res.status(400).json({
+      message:'doc not found'
+    })
+    return;
+  }
+
+
+  doc.approved = signature_obj;
+  await doc.save();
+  
+
+  res.status(200).json({
+    data: doc,
+  });
+};
+
+module.exports.removeApproval = async (req,res)=>{
+  const doc_id = req.params.id;
+  console.log(doc_id);
+  const doc = await Document.findById(doc_id);
+ 
+  if(!doc){
+    res.status(400).json({
+      message:'doc not found'
+    })
+    return;
+  }
+
+   if(doc.approved === null){
+    res.status(400).json({
+      message:'doc is not approved yet'
+    })
+    return;
+  }
+
+  if(req.user.email !== doc.approved.email){
+    res.status(400).json({
+      message:'you are not authorized to remove approval'
+    });
+    return;
+  }
+
+  if(doc.disapprovable()=== false){
+    res.status(400).json({
+      message:'approval cannot be removed'
+    })
+    return;
+  }
+  doc.approved = null;
+  await doc.save();
+  res.status(200).json({
+    message:'approval removed'
+  })
+};
+
+module.exports.verifyapproval = async (req,res)=>{
+  const doc_id = req.params.id;
+  const doc = await Document.findById(doc_id);
+  if(!doc){
+    res.status(400).json({
+      message:'doc not found'
+    })
+    return;
+  }
+  const user = await User.findOne({email:doc.approved.email});
+  const public_key = new rsa();
+  public_key.importKey(user.publicKey,'public');
+  const decrypted = public_key.decryptPublic(doc.approved.signature,'utf8');
+  if(decrypted === doc.approved.email){
+    res.status(200).json({
+      message:'Approval is Authentic',
+    })
+    return;
+  } 
+  res.status(400).json({
+    message:'Approval is not Authentic'
+  });
+};
+
+module.exports.verifySignature = async (req,res)=>{
+        const id = req.params.id;
+        const doc = await Document.findById(id);
+        if(!doc){
+          res.status(400).json({
+            message:'doc not found'
+          })
+          return;
+        }
+        const signatures = doc.signature;
+
+        for(let i = 0; i < signatures.length; i++){
+            const user = await User.findOne({email:signatures[i].email});
+            const public_key = new rsa();
+            public_key.importKey(user.publicKey,'public');
+            const decrypted = public_key.decryptPublic(signatures[i].signature,'utf8');
+            if(decrypted !== signatures[i].email){
+              res.status(400).json({
+                message:'Signature is not Authentic'
+              });
+              return;
+            }
+          
+        }
+
+        res.status(200).json({
+          message:'Signatures are Authentic'
+        });
+}
