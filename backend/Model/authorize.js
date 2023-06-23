@@ -14,6 +14,7 @@ const authorization_table =  new mongoose.Schema({
     
 
 });
-
+// 
+authorization_table.index({user_id:1,document_id:1},{unique:true});
 
 module.exports = mongoose.model('authorization_table', authorization_table);
