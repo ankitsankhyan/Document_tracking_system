@@ -10,11 +10,19 @@ const { request } = require("express");
 
 // ##############################################document funtions#####################################################
 module.exports.createdoc = async (req, res) => {
-  const description = req.body.description;
-  const title = req.body.title;
-  const section = req.body.section;  // this is section of document
+  const description = req.body.description.trim();
+  const title = req.body.title.trim();
+  const section = req.body.section.trim(); 
+  const to = req.body.to.trim();
+  if(!description || !title || !section || !to){
+    res.status(400).json({
+      message:'please provide all the details'
+    })
+    return;
+  }
+   // this is section of document
   // check if user is valid
-   console.log(req.user);
+ 
   const created_by = req.user.id;
     const user = await User.findById(created_by);
     // we will get object directly here
@@ -31,6 +39,7 @@ module.exports.createdoc = async (req, res) => {
     createdBy:created_by,
     section: section,
     description,
+    to:to,
   });
  let requests = [];
    for(let i=0;i<Dispatchers.length;i++){
@@ -47,10 +56,13 @@ module.exports.createdoc = async (req, res) => {
     user_id:created_by,
     document_id:newDoc.id,
   });
+  const authorise2 = await Authorise.create({
+    user_id:to,
+    document_id:newDoc.id,
+  });
 
   res.status(200).json({
     data: newDoc,
-    requests:requests
   });
  
 };
@@ -144,8 +156,8 @@ module.exports.updateDoc = async (req, res) => {
 module.exports.signature = async (req,res)=>{
   // implimented by query 
   const doc_id = req.params.id;
-  const private_key_val = req.body.privateKey;
-   
+  var private_key_val = req.body.privateKey;
+   private_key_val = private_key_val.trim();
     const doc = await Document.findById(doc_id);
     if(!doc_id){
       res.status(400).json({
@@ -153,10 +165,42 @@ module.exports.signature = async (req,res)=>{
       });
       return;
     }
+     // checking if user is authorized to sign the document
+     const authorise = await Authorise.findOne({user_id:req.user.id ,document_id:doc_id});
+    
+      if(!authorise){
+        res.status(400).json({
+          message:'you are not authorized to sign this document'
+        });
+        return;
+      }
+    // checking if user has done signature or not
+    for(let i=0;i<doc.signature.length;i++){
+      if(doc.signature[i].email===req.user.email){
+        res.status(400).json({
+          message:'you have already signed the document'
+        });
+        return;
+      }
+    }
+   
+
     const private_key = new rsa();
     private_key.importKey(private_key_val,'private');
     
     const signature = private_key.encryptPrivate(req.user.email,'base64');
+    const public_key = new rsa();
+    public_key.importKey(req.user.publicKey,'public');
+    try{
+      const decrypted_signature = public_key.decryptPublic(signature,'utf8');
+    }catch(e){
+      res.status(400).json({
+        message:'invalid private key'
+      });
+      return;
+    }
+   
+   
     const signature_obj = { 
       signature:signature,
       email:req.user.email,
@@ -222,7 +266,25 @@ module.exports.getAccessDoc = async (req,res)=>{
 
 module.exports.tagged_docs = async (req,res)=>{
   const user_id = req.user.id;
-  const docs = await Tag.find({tagged_to:user_id}).populate('document_id');
+  console.log(req.user);
+  const docs = await Tag.find({tagged_to:user_id}).populate(
+  {
+    path:'document_id',
+    select:'title description section createdBy',
+
+    populate:{
+      path:'createdBy',
+      select:'name email'
+    }
+  }
+  ).populate({
+    path:'tagged_from',
+    select:'name email'
+  }).populate({
+    path:'tagged_to',
+    select:'name email'
+  });
+
   res.status(200).json({
     data:docs
   })
@@ -239,6 +301,13 @@ module.exports.created_docs = async (req,res)=>{
 module.exports.approveDoc = async (req, res) => {
   const {doc_id, privateKey} = req.body;
   const doc = await Document.findById(doc_id);
+  if(!doc){
+    res.status(400).json({
+      message:'doc not found'
+    })
+    return;
+  }
+  
   if(doc.to.equals(req.user.id)===false){
     res.status(400).json({
       message:'you are not authorised to approve this document'
@@ -249,6 +318,22 @@ module.exports.approveDoc = async (req, res) => {
   const private_key = new rsa();
   private_key.importKey(privateKey,'private');
   const signature = private_key.encryptPrivate(req.user.email,'base64');
+  try{
+    const public_key = new rsa();
+    public_key.importKey(req.user.publicKey,'public');
+    const decrypted_signature = public_key.decryptPublic(signature,'utf8');
+    if(decrypted_signature!==req.user.email){
+      res.status(400).json({
+        message:'invalid private key'
+      });
+      return;
+    }
+  }catch(e){
+    res.status(400).json({
+      message:'invalid private key'
+    });
+    return;
+  }
   const signature_obj = {
     signature:signature,
     email:req.user.email
@@ -322,13 +407,21 @@ module.exports.verifyapproval = async (req,res)=>{
   const user = await User.findOne({email:doc.approved.email});
   const public_key = new rsa();
   public_key.importKey(user.publicKey,'public');
-  const decrypted = public_key.decryptPublic(doc.approved.signature,'utf8');
-  if(decrypted === doc.approved.email){
-    res.status(200).json({
-      message:'Approval is Authentic',
-    })
+  try{
+    const decrypted = public_key.decryptPublic(doc.approved.signature,'utf8');
+    if(decrypted === doc.approved.email){
+      res.status(200).json({
+        message:'Approval is Authentic',
+      })
+      return;
+    } 
+  }catch(e){
+    res.status(400).json({
+      message:'Approval is not Authentic'
+    });
     return;
-  } 
+  }
+ 
   res.status(400).json({
     message:'Approval is not Authentic'
   });
@@ -349,7 +442,16 @@ module.exports.verifySignature = async (req,res)=>{
             const user = await User.findOne({email:signatures[i].email});
             const public_key = new rsa();
             public_key.importKey(user.publicKey,'public');
+            try{
             const decrypted = public_key.decryptPublic(signatures[i].signature,'utf8');
+              
+            }catch(e){
+              res.status(400).json({
+                message:'Signature is not Authentic for ' + signatures[i].email
+              });
+              return;
+            }
+
             if(decrypted !== signatures[i].email){
               res.status(400).json({
                 message:'Signature is not Authentic'
@@ -362,4 +464,31 @@ module.exports.verifySignature = async (req,res)=>{
         res.status(200).json({
           message:'Signatures are Authentic'
         });
+}
+
+module.exports.deleteSignature = async (req,res)=>{
+    const user  = req.user;
+    const doc_id = req.params.id;
+    const doc = await Document.findById(doc_id);
+    if(!doc){
+      res.status(400).json({
+        message:'doc not found'
+      })
+      return;
+    }
+    if(doc.signature.length === 0){
+      res.status(400).json({
+        message:'no signatures to delete'
+      })
+      return;
+    }
+    const signatures = doc.signature;
+    let flag = false;
+    for(let i = 0; i < signatures.length; i++){
+      if(signatures[i].email === user.email){
+        flag = true;
+        break;
+      }
+    }
+    
 }

@@ -8,32 +8,39 @@ router.get('/', function(req, res) {
         message:'working fine',
     });
 });
-
+//######################################## related to document ########################################
 router.post('/create',protect,document_controller.createdoc);
-router.get('/show_tagged_doc',protect,document_controller.tagged_docs);
 router.get('/show_created_doc', protect,document_controller.created_docs);
 router.get('/accessDoc:id',protect,document_controller.getAccessDoc);
-router.patch('/seen:id',protect,tags.mark_as_seen);
-router.post('/newTag',protect,tags.addTag);
-router.patch('/done', protect, tags.mark_as_done);
-router.delete('/delete_tag',protect,tags.delete_tag);
 router.get('/show:id',document_controller.showAllDocs);
-
 router.delete('/delete:id',protect,document_controller.deleteDoc);
-router.patch('/selectRequest:id',protect,tags.selectRequest);
-// update document route
 router.put('/update',document_controller.updateDoc);
-// approve document route
+
+
+//######################################## related to authorization ########################################
+
 router.patch('/approved/',protect ,document_controller.approveDoc);
 router.patch('/deleteapproval:id',protect,document_controller.removeApproval);
-
 router.get('/verifyapproval:id',protect,document_controller.verifyapproval);
-
 router.patch('/signature:id',protect,document_controller.signature);
 router.get('/verifySignatures:id',protect,document_controller.verifySignature);
-// search doc route
 router.get('/search/:id',document_controller.searchDoc);
 
-// sign the document
-router.get('/sign/',document_controller.signature);
+
+//######################################## related to tags ########################################
+router.patch('/seen:id',protect,tags.mark_as_seen);
+router.post('/newTag',protect,tags.addTag);
+router.patch('/done:id', protect, tags.mark_as_done);
+router.delete('/delete_tag',protect,tags.delete_tag);
+router.get('/tagged_doc',protect,document_controller.tagged_docs);
+
+
+
+
+//######################################## related to requests ########################################
+router.patch('/selectRequest:id',protect,tags.selectRequest);
+router.get('/requests',protect,tags.allrequests);
+
+
+
 module.exports = router;

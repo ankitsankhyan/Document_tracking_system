@@ -12,7 +12,6 @@ router.post('/updateCredentials',protect, UsersFuctions.updateCredentials);
 router.post('/updatePassword', UsersFuctions.updatePassword);
 router.post('/createUser', UsersFuctions.createUser);
 router.get('/login', UsersFuctions.login);
-router.get('/verify', UsersFuctions.verifyDocument);
 router.get('/generateKeys',protect, UsersFuctions.generatePublicKey);
 
 

@@ -140,48 +140,13 @@ console.log(email);
   }
 };
 
-const verifysignature =  (email, publicKey, signature) => {
-      
-  const public_key_func = new rsa();
-  public_key_func.importKey(publicKey, "public");
-  const decrypted =  public_key_func.decryptPublic(signature, "utf8");
-  if (decrypted === email) {
-          return true;
-  } else {
-    return false;
-  }
-
-};
-
-module.exports.verifyDocument = async (req, res) => {
-       const {doc_id} = req.body;
-        const document = await Document.findById(doc_id);
-        const {signed_by,signature} = document;
-        console.log(signed_by);
-        for(let i = 0;i<signed_by.length;i++){
-          const user = await User.find({email :signed_by[i].email});
-           for(let j = 0; j < signature.length;j++){
-               const status = verifysignature(user[0].email,user[0].publicKey,signature[j].signature);
-                if(status === false){
-                  res.status(200).json({
-                    message : "Document sign for user" + user[0].email + "is not verified"
-                  });
-                  return;
-                }
-           }
-        }
-
-        res.status(200).json({
-          message : "All document's signature are verified"
-        });
-
-};
-
 module.exports.generatePublicKey = async (req, res) => {
+  
         const {email} =  req.user;
         const {password} = req.body;
-       
+      
         const originalUser = await User.findOne({email : email});
+        console.log(password,originalUser.password);
         const isMatch = await bcrypt.compare(password,originalUser.password);
         if(!isMatch){
           res.status(200).json({

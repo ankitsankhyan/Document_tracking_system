@@ -15,7 +15,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'));
 app.use((err, req, res, next) => {
     if (err.message === 'access denied') {
-      res.status(403);
+      res.status(401);
       res.json({ error: err.message });
     }
 });
