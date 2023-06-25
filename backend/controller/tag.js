@@ -2,12 +2,24 @@ const Tag = require('../Model/Tag');
 const User = require('../Model/user');
 const Document = require('../Model/document');
 const Authorise = require('../Model/authorize');
+const {isValidObjectId} = require('mongoose');
 const Assigned = require('../Model/assigned');
 module.exports.addTag = async(req, res)=>{
       
         const{email, document_id} = req.body;
-        
+        if(!email || !document_id){
+            res.status(400).json({
+                message:'Invalid request'
+            });
+            return;
+        }
         const document  = await Document.findById(document_id);
+        if(!document){
+            res.status(400).json({
+                message:'Document does not exist'
+            });
+            return;
+        }
         const currentDate = new Date();
       if(req.user.designation !== 'Dispatcher'){
         res.status(400).json({
@@ -23,7 +35,7 @@ module.exports.addTag = async(req, res)=>{
        console.log(user);
        console.log(document);
        
-     
+       console.log(user, document);
        const tagged_to = user.id;
        const tagged_from = req.user.id;
         const tag = await Tag.create({tagged_to,tagged_from, document_id});
@@ -53,27 +65,36 @@ module.exports.addTag = async(req, res)=>{
 module.exports.showalltaggedDoc = async(req, res)=>{
 // 
 const id = req.params.id;
-console.log(id);    
+if(isValidObjectId(id)){
+    res.status(400).json({
+        message:'Invalid id'
+    });
+    return;
+}
 const tag = await Tag.find({ tagged_to: id }).populate('document_id');
-
+console.log(tag);
 res.status(200).json({
     data:tag
 })
 
 };
 module.exports.mark_as_seen = async(req, res) => {
-        const doc_id = req.params.id;
-        const doc = await Document.findById(doc_id);
-        if(!doc){
+        const tag_id = req.params.id;
+        // const doc = await Document.findById(doc_id);
+        // if(!doc){
+        //     res.status(400).json({
+        //         message:'Document does not exist'
+        //     });
+        //     return;
+        // }
+        const tag = await Tag.findById(tag_id);
+        if(!tag){
             res.status(400).json({
-                message:'Document does not exist'
+                message:'Tag does not exist'
             });
             return;
         }
-        const tag = await Tag.findOne({document_id:doc_id, tagged_to:req.user.id});
-   
-        const tag_id = tag.id;
-       
+      
         if(!tag.tagged_to.equals(req.user._id)){
            res.status(400).json({
                 message:'Not authorised action'
@@ -99,9 +120,9 @@ module.exports.mark_as_seen = async(req, res) => {
 
 module.exports.mark_as_done = async(req, res) => {
   
-    const doc_id = req.params.id;
+    const tag_id = req.params.id;
     const user_id = req.user.id;
-    const tag = await Tag.findOne({document_id:doc_id, tagged_to:user_id});
+    const tag = await Tag.findById(tag_id);
     
     if(!tag){
         res.status(400).json({
@@ -126,17 +147,18 @@ module.exports.mark_as_done = async(req, res) => {
     },{new:true});
     const Dispatchers = await User.find({designation:'Dispatcher'});
   
-   
+if(req.user.designation !== 'Dispatcher'){
    let requests = [];
      for(let i=0;i<Dispatchers.length;i++){
    const request =   await Assigned.create({
-          document_id:doc_id,
+          document_id:tag.document_id,
           dispatcher_id:Dispatchers[i].id,
           senderId:user_id,
         
      });
      requests.push(request);
      }
+    }
     
     res.status(200).json({
         data:updatedTag
@@ -185,21 +207,29 @@ module.exports.selectRequest = async(req, res)=>{
         });
         return;
         }
+   
    const id = req.params.id;
    const request = await Assigned.findById(id);
- 
+   console.log(request.dispatcher_id);
+   if(!request.dispatcher_id.equals(req.user.id)){
+         res.status(400).json({
+                error:"Not authorised action"
+            });
+            return;
+   }
+  
    if(!request){
     res.status(400).json({
         error:"no request is there"
     })
    }
 
-//    if(request.assigned == true){
-//     res.status(200).json({
-//       error: "request is already assigned"
-//     })
-//     return;
-//  }
+   if(request.assigned == true){
+    res.status(200).json({
+      error: "request is already assigned"
+    })
+    return;
+ }
 
    request.assigned = true;
    await request.save();
@@ -217,7 +247,7 @@ module.exports.selectRequest = async(req, res)=>{
 
     const document = await Document.findById(request.document_id);
     console.log(document);
-    if( document.timeline.length > 0 &&  document.timeline[document.timeline.length-1].name === user.name && document.timeline[document.timeline.length-1].email === user.email){
+    if( document.timeline.length > 0 &&  document.timeline[document.timeline.length-1].name === req.user.name && document.timeline[document.timeline.length-1].email === req.user.email){
         res.status(400).json({
             message:'Already tagged'
         });

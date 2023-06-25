@@ -5,6 +5,7 @@ const rsa = require('node-rsa');
 const Authorise = require('../Model/authorize');
 const Document = require("../Model/document");
 const { request } = require("express");
+const { isValidObjectId } = require('mongoose');
 
 
 
@@ -158,22 +159,30 @@ module.exports.signature = async (req,res)=>{
   const doc_id = req.params.id;
   var private_key_val = req.body.privateKey;
    private_key_val = private_key_val.trim();
+   if(!isValidObjectId(doc_id)){
+    res.status(400).json({
+      error:'invalid document id'
+    });
+    return;
+  }
     const doc = await Document.findById(doc_id);
-    if(!doc_id){
+    if(!doc){
       res.status(400).json({
         message:'doc not found'
       });
       return;
     }
+    
      // checking if user is authorized to sign the document
      const authorise = await Authorise.findOne({user_id:req.user.id ,document_id:doc_id});
     
       if(!authorise){
         res.status(400).json({
-          message:'you are not authorized to sign this document'
+          error:'you are not authorized to sign this document'
         });
         return;
       }
+
     // checking if user has done signature or not
     for(let i=0;i<doc.signature.length;i++){
       if(doc.signature[i].email===req.user.email){
@@ -237,7 +246,7 @@ module.exports.searchDoc = async (req, res) => {
 };
 
 module.exports.getAccessDoc = async (req,res)=>{
-  console.log(req.user.id);
+  console.log(req.user);
   const doc_id = req.params.id;
   const user_id = req.user.id;
   const authorise = await Authorise.findOne({document_id:doc_id,user_id:user_id});
@@ -246,12 +255,12 @@ module.exports.getAccessDoc = async (req,res)=>{
   const doc = await Document.findById(doc_id);
   console.log(doc);
   console.log(authorise);
-  if(doc.section === req.user.section){
-    res.status(200).json({
-      data:doc
-    })
-    return;
-  }
+  // if(doc.section === req.user.section){
+  //   res.status(200).json({
+  //     data:doc
+  //   })
+  //   return;
+  // }
   if(authorise){
     res.status(200).json({
       data:doc
@@ -265,7 +274,8 @@ module.exports.getAccessDoc = async (req,res)=>{
 };
 
 module.exports.tagged_docs = async (req,res)=>{
-  const user_id = req.user.id;
+  const user_id = req.user._id;
+ 
   console.log(req.user);
   const docs = await Tag.find({tagged_to:user_id}).populate(
   {

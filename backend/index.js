@@ -9,7 +9,7 @@ const cors = require('cors');
 
 // Parse JSON bodies
 app.use(express.json());
-
+app.use(cors());
 // Parse URL-encoded bodies
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'));
