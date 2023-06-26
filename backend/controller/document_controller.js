@@ -268,8 +268,7 @@ module.exports.getAccessDoc = async (req,res)=>{
   const authorise = await Authorise.findOne({document_id:doc_id,user_id:user_id});
  
 
-  const doc = await Document.findById(doc_id);
-  console.log(doc);
+  const doc = await Document.findById(doc_id).populate('createdBy','name email');
   console.log(authorise);
   // if(doc.section === req.user.section){
   //   res.status(200).json({
