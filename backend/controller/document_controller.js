@@ -41,7 +41,7 @@ module.exports.createdoc = async (req, res) => {
     section: section,
     description,
     to:to,
-  });
+  })
  let requests = [];
    for(let i=0;i<Dispatchers.length;i++){
  const request =   await Assigned.create({
@@ -166,6 +166,22 @@ module.exports.signature = async (req,res)=>{
     return;
   }
     const doc = await Document.findById(doc_id);
+  if(doc.to.equals(req.user._id)===true){
+    res.status(400).json({
+      error:'Please do sign in approve section'
+    });
+    return;
+  }
+
+
+    if(doc.createdBy.equals(req.user._id)===true){
+      res.status(400).json({
+        error:'you are not authorized to sign this document'
+      });
+      return;
+    }
+
+
     if(!doc){
       res.status(400).json({
         message:'doc not found'
@@ -301,7 +317,13 @@ module.exports.tagged_docs = async (req,res)=>{
 };
 
 module.exports.created_docs = async (req,res)=>{
-  const docs = await Document.find({createdBy:req.user.id});
+  const docs = await Document.find({createdBy:req.user.id}).populate({
+    path:'createdBy',
+    select:'name email'
+  }).populate({
+    path:'to',
+    select:'name email'
+    });
   res.status(200).json({
     data:docs,
     message:'success'

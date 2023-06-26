@@ -173,3 +173,22 @@ module.exports.generatePublicKey = async (req, res) => {
         });
          
 };
+
+module.exports.getProfile = async (req,res) => {
+     const id = req.params.id;
+     const user = await User.findById(id);
+      if(!user){
+        res.status(401).json({
+          message : "User does not exist"
+        })
+        return;
+      }
+
+      res.status(200).json({
+        name : user.name,
+        email : user.email,
+        designation : user.designation,
+        section : user.section
+      })
+
+}

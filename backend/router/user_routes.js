@@ -11,9 +11,9 @@ const router = express.Router();
 router.post('/updateCredentials',protect, UsersFuctions.updateCredentials);
 router.post('/updatePassword', UsersFuctions.updatePassword);
 router.post('/createUser', UsersFuctions.createUser);
-router.get('/login', UsersFuctions.login);
+router.post('/login', UsersFuctions.login);
 router.get('/generateKeys',protect, UsersFuctions.generatePublicKey);
-
+router.get('/profile', UsersFuctions.getProfile);
 
 
 module.exports = router;
