@@ -12,7 +12,7 @@ router.post('/updateCredentials',protect, UsersFuctions.updateCredentials);
 router.post('/updatePassword', UsersFuctions.updatePassword);
 router.post('/createUser', UsersFuctions.createUser);
 router.post('/login', UsersFuctions.login);
-router.get('/generateKeys',protect, UsersFuctions.generatePublicKey);
+router.post('/generateKeys',protect, UsersFuctions.generatePublicKey);
 router.get('/profile', UsersFuctions.getProfile);
 
 

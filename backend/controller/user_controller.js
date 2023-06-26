@@ -130,6 +130,7 @@ console.log(email);
       name: user[0].name,
       email: user[0].email,
       designation: user[0].designation,
+      section:user[0].section,
       token: generateToken(user[0].id),
     });
     return;
