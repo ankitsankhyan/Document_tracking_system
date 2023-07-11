@@ -7,6 +7,7 @@ const NodeRSA = require("node-rsa");
 const {generateRandomBytes} = require("../utils/helper");
 const PasswordResetToken = require("../Model/passwordResetToken");
 const { generateMailTransporter } = require("../utils/mail");
+const passwordResetToken = require("../Model/passwordResetToken");
 module.exports.createUser = async (req, res) => {
  
   
@@ -209,21 +210,16 @@ module.exports.generatelink = async (req, res) => {
     });
     return;
   }
-  const availtoken = await PasswordResetToken.find({user : user._id});
+  const availtoken = await PasswordResetToken.deleteMany({userId : user._id});
 
   // deleting token if already exists
 
-  if(availtoken){
-   availtoken.forEach(async (token) => {
-      await token.remove();
-    } )
 
-  }
 
   const passwordResetToken = await PasswordResetToken.create({
     token : token,
-    user : user._id,
-    createdAt : Date.now()
+    userId : user._id,
+   
   });
   const link = `http://localhost:3000/resetpassword?token=${token}&user_id=${user._id}`;
   
@@ -263,7 +259,7 @@ module.exports.resetPassword = async(req, res)=>{
    const updateUser = await User.findByIdAndUpdate(req.user._id,{
     ...req.user,password : password
    })
-
+  await PasswordResetToken.findOneAndDelete({userId : req.user._id});
   res.status(200).json({
     message : "Password reset successfully",
     user: updateUser
