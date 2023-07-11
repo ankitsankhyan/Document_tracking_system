@@ -4,6 +4,9 @@ const bcrypt = require("bcryptjs");
 const rsa = require("node-rsa");
 const generateToken = require("../config/generateToken");
 const NodeRSA = require("node-rsa");
+const {generateRandomBytes} = require("../utils/helper");
+const PasswordResetToken = require("../Model/passwordResetToken");
+const { generateMailTransporter } = require("../utils/mail");
 module.exports.createUser = async (req, res) => {
  
   
@@ -192,4 +195,77 @@ module.exports.getProfile = async (req,res) => {
         section : user.section
       })
 
+}
+
+// password verification
+module.exports.generatelink = async (req, res) => {
+  const {email} = req.body;
+  const token = await generateRandomBytes();
+  
+  const user = await User.findOne({email : email});
+  if(!user){
+    res.status(400).json({
+      message : "User does not exist"
+    });
+    return;
+  }
+  const availtoken = await PasswordResetToken.find({user : user._id});
+
+  // deleting token if already exists
+
+  if(availtoken){
+   availtoken.forEach(async (token) => {
+      await token.remove();
+    } )
+
+  }
+
+  const passwordResetToken = await PasswordResetToken.create({
+    token : token,
+    user : user._id,
+    createdAt : Date.now()
+  });
+  const link = `http://localhost:3000/resetpassword?token=${token}&user_id=${user._id}`;
+  
+  const transporter = generateMailTransporter();
+  transporter.sendMail({
+    from:'doctracksys@gmail.com',
+    to:'ankitsankhyan04@gmail.com',
+    subject:'Reset Password Link',
+    html:`
+    <p> Click here to reset password</p>
+    <a href = '${link}'> Change Password</a> `,
+
+  })
+
+  res.status(200).json({
+    message : "Password reset link has been sent to your email",
+    link:link
+  });
+
+
+};
+
+module.exports.verifyLink = async(req, res)=>{
+   res.status(200).json({
+        message:'user is authorised'
+   })
+}
+
+module.exports.resetPassword = async(req, res)=>{
+   const {password, confirmPassword} = req.body;
+   if(password !== confirmPassword){
+     req.status(200).json({
+        message : "Password and confirm password does not match"
+      });
+   }
+
+   const updateUser = await User.findByIdAndUpdate(req.user._id,{
+    ...req.user,password : password
+   })
+
+  res.status(200).json({
+    message : "Password reset successfully",
+    user: updateUser
+  });
 }
