@@ -11,8 +11,8 @@ const passwordResetToken = require("../Model/passwordResetToken");
 const cloudinary = require("../cloud/index");
 module.exports.createUser = async (req, res) => {
  
-  
     console.log(req.body);
+ 
     const { name, email, password, designation,section } = req.body;
     const user = await User.findOne({ email: email });
     console.log(user);
@@ -36,7 +36,7 @@ module.exports.createUser = async (req, res) => {
       if(file){
        
         const result = await cloudinary.uploader.upload(file.path, {pages:true});
-     
+       console.log(result);
          newUser.avatar = {
            url: result.secure_url,
            public_id: result.public_id
@@ -46,7 +46,9 @@ module.exports.createUser = async (req, res) => {
       }
 
     }catch(e){
-      console.log(e);
+      res.status(400).json({
+        error:e
+      });
     }
    
     
@@ -60,10 +62,11 @@ module.exports.createUser = async (req, res) => {
 };
 
 module.exports.updateCredentials = async (req, res) => {
- 
+   console.log(req.body);
   
     const { name, email, password, designation,section } = req.body;
-    console.log(req.body);
+    console.log(name, email, password, designation,section);
+   
     if(req.user.email !== email){
       res.status(401).json({
         message: "You are not authorized to update this user",
@@ -72,6 +75,7 @@ module.exports.updateCredentials = async (req, res) => {
     }
     
     const user = await User.find({ email });
+  
     if (user.length === 0) {
       res.status(200).json({
         message: "User does not exist",
@@ -324,5 +328,28 @@ module.exports.resetPassword = async(req, res)=>{
   res.status(200).json({
     message : "Password reset successfully",
    
+  });
+}
+
+module.exports.changePassword = async(req, res)=>{
+  const {oldPassword, newPassword, confirmNewPassword} = req.body;
+  if(newPassword !== confirmNewPassword){
+    res.status(200).json({
+      message : "New password and confirm password does not match"
+    });
+    return;
+  }
+  const user = await User.findById(req.user._id);
+  const isMatch = await bcrypt.compare(oldPassword,user.password);
+  if(!isMatch){
+    res.status(200).json({
+      message : "Old password is not correct"
+    });
+    return;
+  }
+  user.password = newPassword;
+  await user.save();
+  res.status(200).json({
+    message : "Password changed successfully"
   });
 }

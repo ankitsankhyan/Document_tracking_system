@@ -18,5 +18,5 @@ router.get('/profile', UsersFuctions.getProfile);
 router.get('/resetLink', UsersFuctions.generatelink);
 router.get('/verifyLink',verifyToken, UsersFuctions.verifyLink);
 router.post('/resetPassword', verifyToken, UsersFuctions.resetPassword)
-
+router.patch('/changePassword',protect, UsersFuctions.changePassword);
 module.exports = router;

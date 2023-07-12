@@ -7,11 +7,14 @@ const db = require('./config/localdb');
 const morgan = require('morgan');
 const cors = require('cors');
 require('dotenv').config()
+
 // Parse JSON bodies
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 // Parse URL-encoded bodies
-app.use(express.urlencoded({ extended: true }));
+
+
 app.use(morgan('dev'));
 app.use((err, req, res, next) => {
     if (err.message === 'access denied') {
