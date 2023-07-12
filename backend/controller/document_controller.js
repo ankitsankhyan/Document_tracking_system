@@ -6,6 +6,7 @@ const Authorise = require('../Model/authorize');
 const Document = require("../Model/document");
 const { request } = require("express");
 const { isValidObjectId } = require('mongoose');
+const { all } = require('../router');
 
 
 
@@ -238,23 +239,38 @@ module.exports.signature = async (req,res)=>{
 };
 
 module.exports.searchDoc = async (req, res) => {
-  const keyword = req.params.id;
-  const section = req.user.section;
+  var query = req.params.keyword;
+  query = query.trim();
+  const keywords = query.split(' ');
+  console.log(keywords);
   try {
-    const documents = await Document.find({ 
-      $or: [
-        { title: { $regex: keyword, $options: 'i' } },
-        { description: { $regex: keyword, $options: 'i' },
-      }
-      ],
-      section:section
-    });
+    var alldocs = [];
 
+    for (const keyword of keywords) {
+      const documents = await Document.find({ 
+        $or: [
+          { title: { $regex: keyword, $options: 'i' } },
+          { description: { $regex: keyword, $options: 'i' }},
+          { section: { $regex: keyword, $options: 'i' }}
+        ],
+      });
+
+      for (const doc of documents) {
+        const isDuplicate = alldocs.some(existingDoc => existingDoc._id.toString() === doc._id.toString());
+    
+        if (!isDuplicate) {
+          alldocs.push(doc);
+        }
+      }
+    }
+ 
+  
 
     res.status(200).json({
-      data: documents
+      data: alldocs
     });
   } catch (error) {
+    console.log(error);
     res.status(500).json({
       message: 'An error occurred while searching for documents.'
     });

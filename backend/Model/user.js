@@ -35,10 +35,16 @@ const user = new mongoose.Schema(
       default: false,
     },
     
-      avatar: {
-        type: String,
-        default: "https://cdn.vectorstock.com/i/1000x1000/32/12/default-avatar-profile-icon-vector-39013212.webp"
-    }
+    avatar:{
+      type:Object,
+      url:String,
+      public_id:String,
+      default:{
+        publicId:null,
+        url:"https://cdn.vectorstock.com/i/1000x1000/32/12/default-avatar-profile-icon-vector-39013212.webp"
+      }
+
+  }
 
   },
   {

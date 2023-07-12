@@ -2,6 +2,7 @@ const express = require('express');
 const UsersFuctions = require('../controller/user_controller');
 const {verifyToken} = require('../middleware/user');
 const {protect} = require('../middleware/authenticaion');
+const {uploadImage} = require('../middleware/multer');
 const router = express.Router();
 
 
@@ -10,7 +11,7 @@ const router = express.Router();
 
 router.post('/updateCredentials',protect, UsersFuctions.updateCredentials);
 router.post('/updatePassword', UsersFuctions.updatePassword);
-router.post('/createUser', UsersFuctions.createUser);
+router.post('/createUser',uploadImage.single('avatar'), UsersFuctions.createUser);
 router.post('/login', UsersFuctions.login);
 router.post('/generateKeys',protect, UsersFuctions.generatePublicKey);
 router.get('/profile', UsersFuctions.getProfile);

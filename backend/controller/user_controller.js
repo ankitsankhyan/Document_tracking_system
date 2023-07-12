@@ -8,6 +8,7 @@ const {generateRandomBytes} = require("../utils/helper");
 const PasswordResetToken = require("../Model/passwordResetToken");
 const { generateMailTransporter } = require("../utils/mail");
 const passwordResetToken = require("../Model/passwordResetToken");
+const cloudinary = require("../cloud/index");
 module.exports.createUser = async (req, res) => {
  
   
@@ -21,17 +22,36 @@ module.exports.createUser = async (req, res) => {
       });
       return;
     }
+    const newUser = await User.create({
+      name: name,
+      email: email,
+      password: password,
+      designation: designation,
+      section: section,
+   
+});
+    try{
+      const file = req.file;
+      console.log(file);
+      if(file){
+       
+        const result = await cloudinary.uploader.upload(file.path, {pages:true});
+     
+         newUser.avatar = {
+           url: result.secure_url,
+           public_id: result.public_id
+         };
+       
+        newUser.save();
+      }
 
- 
+    }catch(e){
+      console.log(e);
+    }
+   
+    
   
-            const newUser = await User.create({
-                                                name: name,
-                                                email: email,
-                                                password: password,
-                                                designation: designation,
-                                                section: section,
-                                             
-            });
+         
 
     res.status(200).json({
       data: newUser,
@@ -50,6 +70,7 @@ module.exports.updateCredentials = async (req, res) => {
       });
       return;
     }
+    
     const user = await User.find({ email });
     if (user.length === 0) {
       res.status(200).json({
@@ -57,6 +78,42 @@ module.exports.updateCredentials = async (req, res) => {
       });
       return;
     }
+    if(req.file){
+      if(user[0].avatar.public_id === null){
+        const file = req.file;
+        
+        if(file){
+         
+          const result = await cloudinary.uploader.upload(file.path, {pages:true});
+       
+           user[0].avatar = {
+             url: result.secure_url,
+             public_id: result.public_id
+           };
+         
+          user[0].save();
+        }
+      }else{
+        const public_id = user[0].avatar.public_id;
+        const {result} = await cloudinary.uploader.destroy(public_id);
+        if(result === 'ok'){
+          const file = req.file;
+         
+          if(file){
+           
+            const result = await cloudinary.uploader.upload(file.path, {pages:true});
+         
+             user[0].avatar = {
+               url: result.secure_url,
+               public_id: result.public_id
+             };
+           
+            user[0].save();
+          }
+        }
+      }
+    }
+   
     const status = await bcrypt.compare(password, user[0].password);
     if (status) {
       user[0].name = name;
@@ -222,17 +279,21 @@ module.exports.generatelink = async (req, res) => {
    
   });
   const link = `http://localhost:3000/resetpassword?token=${token}&user_id=${user._id}`;
+  try{
+    const transporter = generateMailTransporter();
+    transporter.sendMail({
+      from:'doctracksys@gmail.com',
+      to:'ut2002mishra@gmail.com',
+      subject:'Reset Password Link',
+      html:`
+      <p> Click here to reset password</p>
+      <a href = '${link}'> Change Password</a> `,
   
-  const transporter = generateMailTransporter();
-  transporter.sendMail({
-    from:'doctracksys@gmail.com',
-    to:'ankitsankhyan04@gmail.com',
-    subject:'Reset Password Link',
-    html:`
-    <p> Click here to reset password</p>
-    <a href = '${link}'> Change Password</a> `,
-
-  })
+    })
+  }catch(error){
+    console.log(error);
+  }
+ 
 
   res.status(200).json({
     message : "Password reset link has been sent to your email",
