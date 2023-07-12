@@ -9,8 +9,8 @@ const generateMailTransporter =()=>{
         port: 465,
         secure: true,
         auth: {
-            user: 'doctracksys@gmail.com',
-            pass: 'kpvpfyctwzqidldd'
+            user: process.env.Nodemailer_user,
+            pass: process.env.Nodemailer_pass
           }
     })
 }

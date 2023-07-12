@@ -262,6 +262,6 @@ module.exports.resetPassword = async(req, res)=>{
   await PasswordResetToken.findOneAndDelete({userId : req.user._id});
   res.status(200).json({
     message : "Password reset successfully",
-    user: updateUser
+   
   });
 }
