@@ -6,61 +6,77 @@ const {isValidObjectId} = require('mongoose');
 const Assigned = require('../Model/assigned');
 module.exports.addTag = async(req, res)=>{
       
-        const{email, document_id} = req.body;
-        if(!email || !document_id){
-            res.status(400).json({
-                message:'Invalid request'
-            });
-            return;
-        }
-        const document  = await Document.findById(document_id);
-        if(!document){
-            res.status(400).json({
-                message:'Document does not exist'
-            });
-            return;
-        }
-        const currentDate = new Date();
-      if(req.user.designation !== 'Dispatcher'){
+            
+    const{email, document_id} = req.body;
+    if(!email || !document_id){
         res.status(400).json({
-            message:'Only Dispatcher can tag'
+            message:'Invalid request'
         });
         return;
-      }
-        const date = currentDate.toLocaleDateString();
+    }
+    const document  = await Document.findById(document_id);
+    if(!document.approved){
+         res.status(400).json({
+            error:'document is approved already'
+         })
+    }
+    if(!document){
+        res.status(400).json({
+            message:'Document does not exist'
+        });
+        return;
+    }
+ 
+
+    const currentDate = new Date();
+
+  if(req.user.designation !== 'Dispatcher'){
+    res.status(400).json({
+        message:'Only Dispatcher can tag'
+    });
+    return;
+  }
+    const date = currentDate.toLocaleDateString();
 
 
-        const time = currentDate.toLocaleTimeString();
-        const user =await User.findOne({email:email});
-       console.log(user);
-       console.log(document);
+    const time = currentDate.toLocaleTimeString();
+    const user =await User.findOne({email:email});
+    const prv_tag = await Tag.find({document_id:document_id, tagged_from:req.user.id, tagged_to:user.id, done:'false'});
+    if(prv_tag.length > 0){
+        res.status(400).json({
+            message:'Already tagged'
+        });
+        return;
+    }
+   console.log(user);
+   console.log(document);
+   
+   console.log(user, document);
+   const tagged_to = user.id;
+   const tagged_from = req.user.id;
+    const tag = await Tag.create({tagged_to,tagged_from, document_id});
+    const authorise = await Authorise.findOne({user_id:user.id, document_id:document_id});
+    if(!authorise){
+        const newAuthorise = await Authorise.create({user_id:user.id, document_id:document_id});
+    }
+    if( document.timeline.length > 0 &&  document.timeline[document.timeline.length-1].name === user.name && document.timeline[document.timeline.length-1].email === user.email){
+        res.status(400).json({
+            message:'Already tagged'
+        });
+        return;
+    }
+    document.timeline.push({
+        name:user.name,
+        email:user.email,
+        date:date,
+        time:time,
+    });
+
+    await document.save();
+    res.status(200).json({
+        data:tag,
        
-       console.log(user, document);
-       const tagged_to = user.id;
-       const tagged_from = req.user.id;
-        const tag = await Tag.create({tagged_to,tagged_from, document_id});
-        const authorise = await Authorise.findOne({user_id:user.id, document_id:document_id});
-        if(!authorise){
-            const newAuthorise = await Authorise.create({user_id:user.id, document_id:document_id});
-        }
-        if( document.timeline.length > 0 &&  document.timeline[document.timeline.length-1].name === user.name && document.timeline[document.timeline.length-1].email === user.email){
-            res.status(400).json({
-                message:'Already tagged'
-            });
-            return;
-        }
-        document.timeline.push({
-            name:user.name,
-            email:user.email,
-            date:date,
-            time:time,
-        });
-
-        await document.save();
-        res.status(200).json({
-            data:tag,
-           
-        });
+    });
 }
 module.exports.showalltaggedDoc = async(req, res)=>{
 // 
@@ -120,33 +136,53 @@ module.exports.mark_as_seen = async(req, res) => {
 
 module.exports.mark_as_done = async(req, res) => {
   
-    const tag_id = req.params.id;
+    const doc_id = req.params.id;
     const user_id = req.user.id;
-    const tag = await Tag.findById(tag_id);
-    
-    if(!tag){
+    if(req.user.designation === 'dispatcher'){
         res.status(400).json({
-            error:'No such tag'
+            error:"Dispatcher can't mark as done"
+        })
+        return;
+    }
+    const tags = await Tag.find({document_id:doc_id, tagged_to:user_id, done:false});
+    
+    console.log(tags,'$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$');
+    if(tags.length == 0){
+        res.status(400).json({
+            error:'Mark as done'
         });
         return;
     }
- 
-    if(!tag.tagged_to.equals(req.user.id)){
-      res.status(400).json({
-                error:'Not authorised action'
-            });
 
+    console.log(tags.length, 'printing tags');
+    if(tags[0].done == true){
+        res.status(400).json({
+            error:'Already done'
+        });
+        return;
     }
+    if(tags.length > 1){
+        res.status(400).json({
+            error:'More than one tag'
+        })
+        return;
+    }
+    console.log(tags);
+    const tag = tags[0];
     if(tag.done == true){
         res.status(400).json({
-            error:"already done"
-        })
+                    error:'Already done'
+                });
+                return;
     }
-    const updatedTag = await Tag.findByIdAndUpdate(tag._id,{
-        done:true
-    },{new:true});
+    tags.forEach(async(tag) =>{
+         tag.done = true;
+        await tag.save();
+
+    });
+
+   
     const Dispatchers = await User.find({designation:'Dispatcher'});
-  
 if(req.user.designation !== 'Dispatcher'){
    let requests = [];
      for(let i=0;i<Dispatchers.length;i++){
@@ -159,11 +195,13 @@ if(req.user.designation !== 'Dispatcher'){
      requests.push(request);
      }
     }
+    console.log(requests);
     
     res.status(200).json({
-        data:updatedTag
+        data:tags
     });
 
+ 
  
 
 }
@@ -301,4 +339,20 @@ module.exports.allrequests = async(req, res)=>{
     res.status(200).json({
         data1:requests
     });
+}
+module.exports.getTags = async(req, res)=>{
+    var doc_id = req.params.id;
+    console.log(doc_id);
+    
+    if(!isValidObjectId(doc_id)){
+           res.status(400).json({
+                           message:'Invalid id'
+                       });
+                       return;
+    }
+    const tags = await Tag.find({document_id:doc_id, tagged_to:req.user.id});
+    res.status(200).json({
+             data:tags
+         });
+   
 }

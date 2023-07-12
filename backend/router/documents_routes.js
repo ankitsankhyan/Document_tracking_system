@@ -3,11 +3,7 @@ const router = express.Router();
 const {protect} = require('../middleware/authenticaion')
 const document_controller = require('../controller/document_controller');
 const tags = require('../controller/tag');
-router.get('/', function(req, res) {
-    res.status(200).json({
-        message:'working fine',
-    });
-});
+
 //######################################## related to document ########################################
 router.post('/create',protect,document_controller.createdoc);
 router.get('/show_created_doc', protect,document_controller.created_docs);
@@ -33,6 +29,7 @@ router.post('/newTag',protect,tags.addTag);
 router.patch('/done:id', protect, tags.mark_as_done);
 router.delete('/delete_tag',protect,tags.delete_tag);
 router.get('/tagged_doc',protect,document_controller.tagged_docs);
+router.get('/get_tags:id',protect,tags.getTags);
 
 
 
