@@ -9,7 +9,7 @@ const router = express.Router();
 // ####################routes####################
 
 
-router.post('/updateCredentials',protect, UsersFuctions.updateCredentials);
+router.post('/updateCredentials',uploadImage.single('avatar'),protect, UsersFuctions.updateCredentials);
 router.post('/updatePassword', UsersFuctions.updatePassword);
 router.post('/createUser',uploadImage.single('avatar'), UsersFuctions.createUser);
 router.post('/login', UsersFuctions.login);

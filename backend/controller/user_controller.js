@@ -10,12 +10,12 @@ const { generateMailTransporter } = require("../utils/mail");
 const passwordResetToken = require("../Model/passwordResetToken");
 const cloudinary = require("../cloud/index");
 module.exports.createUser = async (req, res) => {
- 
+    // base64 encoded image data
+    // console.log(req.body, '(((((((())))))))))');
     console.log(req.body);
- 
     const { name, email, password, designation,section } = req.body;
     const user = await User.findOne({ email: email });
-    console.log(user);
+    // console.log(user);
     if (user) {
       res.status(400).json({
         message: "User already exists",
@@ -35,7 +35,7 @@ module.exports.createUser = async (req, res) => {
       console.log(file);
       if(file){
        
-        const result = await cloudinary.uploader.upload(file.path, {pages:true});
+      const result = await cloudinary.uploader.upload(file.path, {pages:true});
        console.log(result);
          newUser.avatar = {
            url: result.secure_url,
@@ -46,8 +46,10 @@ module.exports.createUser = async (req, res) => {
       }
 
     }catch(e){
-      res.status(400).json({
-        error:e
+      console.log(e);
+      return res.status(200).json({
+         data: newUser,
+         message:"image upload failed"
       });
     }
    
@@ -62,15 +64,16 @@ module.exports.createUser = async (req, res) => {
 };
 
 module.exports.updateCredentials = async (req, res) => {
-   console.log(req.body);
-  
+      console.log(req.body);
+    
     const { name, email, password, designation,section } = req.body;
-    console.log(name, email, password, designation,section);
+    console.log(req.body);
    
     if(req.user.email !== email){
       res.status(401).json({
         message: "You are not authorized to update this user",
       });
+      console.log(req.body);
       return;
     }
     
@@ -82,10 +85,14 @@ module.exports.updateCredentials = async (req, res) => {
       });
       return;
     }
+
+   try{
     if(req.file){
-      if(user[0].avatar.public_id === null){
-        const file = req.file;
+     
+      if(user[0].avatar.public_id == 'null' || user[0].avatar.public_id == undefined ){
         
+        const file = req.file;
+        console.log('running');
         if(file){
          
           const result = await cloudinary.uploader.upload(file.path, {pages:true});
@@ -95,7 +102,7 @@ module.exports.updateCredentials = async (req, res) => {
              public_id: result.public_id
            };
          
-          user[0].save();
+       
         }
       }else{
         const public_id = user[0].avatar.public_id;
@@ -112,18 +119,22 @@ module.exports.updateCredentials = async (req, res) => {
                public_id: result.public_id
              };
            
-            user[0].save();
+           
           }
         }
       }
     }
+   }catch(err){
+    console.log(err);
+   }
+  
    
     const status = await bcrypt.compare(password, user[0].password);
     if (status) {
       user[0].name = name;
-      user[0].email = email;
       user[0].designation = designation;
       user[0].section = section;
+    
       user[0].save();
       res.status(200).json({
         message: "User updated successfully",
@@ -132,6 +143,7 @@ module.exports.updateCredentials = async (req, res) => {
           email: user[0].email,
           designation: user[0].designation,
           section:user[0].section,
+          avatar: user[0].avatar
         },
       });
       return;

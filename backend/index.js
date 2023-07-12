@@ -2,11 +2,13 @@ const express = require('express');
 const app = express();
 require('express-async-errors');
 const dotenv = require('dotenv');
+require('dotenv').config()
 const routes = require('./router/index');
 const db = require('./config/localdb');
 const morgan = require('morgan');
 const cors = require('cors');
-require('dotenv').config()
+const bodyParser = require('body-parser');
+
 
 // Parse JSON bodies
 app.use(express.json());
@@ -24,6 +26,7 @@ app.use((err, req, res, next) => {
 });
 app.use('/',routes);
 const port = 8000;
+console.log(process.env.api_key, process.env.api_secret, process.env.cloud_name);
 
 app.listen(port,()=>{
     console.log(`Server is running on port ${port}`);
