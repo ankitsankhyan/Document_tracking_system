@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>My Web Page</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="setting_styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&family=Roboto:ital,wght@0,100;1,300&family=Rubik:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <header class="header">
+    <div class="navbar">
+      <div class="logo"><img src="../img/logo.JPG" class="logo-img" /></div>
+      <div class="company-name">Doctrac</div>
+     
+    </div>
+  </header>
+
+  <section class="main">
+    <div class="sidebar-list">
+      <ul class="sidebar">
+        <li>
+          <a href="dashboard.html">
+            <img class="side-img" src="../img/layout.png" alt="dashboard" />
+          </a>
+        </li>
+        <li>
+          <a href="profile.html">
+            <img class="side-img" src="../img/profile.png" alt="profile" />
+          </a>
+        </li>
+        <li>
+          <a href="create.html">
+            <img class="side-img" src="../img/plus.png" alt="create" />
+          </a>
+        </li>
+        <li>
+          <a href="setting.html">
+            <img class="side-img" src="../img/cogwheel.png" alt="setting" />
+          </a>
+        </li>
+        <li>
+          <p id="logout">
+            <img class="side-img" src="../img/logout.png" alt="logout" />
+          </p>
+        </li>
+      </ul>
+    </div>
+    <section class="whole-section">
+      <h1 class="title">
+        Settings
+      </h1>
+      <div class="con">
+        
+        <ul>
+          <li class="seting-list">
+          <h2 class="sec_title">
+            Private Key for Signature Authentication
+          </h2>
+          
+            <button id="generate-button">Generate</button>
+          </li>
+          <li class="setting-list" id="for-admin">
+            <h2 class="sec_title">
+              Generate New User
+            </h2>
+            <button class="generate-btn" id="generate-user">Generate</button>
+          </li>
+          
+         
+          <li class="setting-list" id="for-password">
+            <h2 class="sec_title">
+              Change Password
+            </h2>
+            <button class="generate-btns" id="generate-user">Generate</button>
+          </li>
+                
+        </ul>
+      </div>
+    </section>
+
+
+    <!-- public key -->
+
+    <div class="generate-modal" id="generate-modal" >
+      <div class="generate-modal-content" >
+        <span class="generate-close">&times;</span>
+        <form id="password-form">
+          <label for="password-input" class="pass-input">Enter Password:</label>
+          <input type="password" id="password-input" class="pass-input"/>
+          <button type="submit" id="password-submit">Submit</button>
+        </form>
+      </div>
+    </div>
+    
+    <div id="result-modal" class="generate-modal">
+      <div class="generate-modal-content">
+        <span class="generate-close">&times;</span>
+        <div id="generate-modal-data"></div>
+      </div>
+    </div>
+
+    <!-- public key -->
+
+
+
+
+    <!-- create user -->
+    <div class="user-generate-modal custom-modal">
+      <div class="user-generate-modal-content custom-modal-content">
+        <span class="close">&times;</span>
+        <form id="user-form" class="user-form">
+          <label for="name" class="vertical-label">Name:</label>
+          <input type="text" id="name" name="name" class="vertical-input" required>
+          <label for="password" class="vertical-label">Password:</label>
+          <input type="password" id="password" name="password" class="vertical-input" required>
+          <label for="designation" class="vertical-label">Designation:</label>
+          <input type="text" id="designation" name="designation" class="vertical-input" required>
+          <label for="section" class="vertical-label">Section:</label>
+          <input type="text" id="section" name="section" class="vertical-input" required>
+          <label for="email" class="vertical-label">Email:</label>
+          <input type="email" id="email" name="email" class="vertical-input" required>
+          <label for="photo" class="vertical-label">Photo:</label>
+          <input type="file" id="photo" name="avatar" class="vertical-input" >
+          <button type="submit" class="submit-btn">Submit</button>
+        </form>
+      </div>
+    </div>
+    <!--  create user -->
+
+
+
+    <!-- change password -->
+    <div class="pass-generate-modal" id="pass-generate-modal" style="display: none;">
+      <div class="pass-generate-modal-content" >
+        <span class="pass-generate-close">&times;</span>
+        <form id="pass-password-form">
+          <label for="pass-old-password-input" class="pass-pass-input ">Old Password:</label>
+          <input type="password" id="pass-old-password-input" class="pass-pass-input label-pass"/>
+          <label for="pass-new-password-input" class="pass-pass-input ">New Password:</label>
+          <input type="password" id="pass-new-password-input" class="pass-pass-input label-pass"/>
+          <label for="pass-conf-password-input" class="pass-pass-input ">Confirm Password:</label>
+          <input type="password" id="pass-con-password-input" class="pass-pass-input label-pass"/>
+          <button type="submit" id="pass-password-submit">Submit</button>
+        </form>
+      </div>
+    </div>
+    <!-- change password -->
+
+
+    <script src="../logic/setting_script.js"></script>
+    
+</body>
+
+</html>

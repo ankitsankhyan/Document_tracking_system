@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+  <link rel="stylesheet" href="document_styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&family=Roboto:ital,wght@0,100;1,300&family=Rubik:wght@400;500;600;700&display=swap"
+    rel="stylesheet" />
+</head>
+
+<body>
+  <div class="head">
+    <div class="titles">
+      <p class="title" >Title</p>
+      <p class="project-name" id="para-title"></p>
+    </div>
+    <div class="created">
+      <p class="title" >Created By</p>
+      <p class="project-name" id="created-desc"></p>
+    </div>
+    <div class="Status">
+      <p class="title" >Section</p>
+      <p class="project-name" id="section-desc"></p>
+    </div>
+  </div>
+  <div class="checks" id="signu">
+    <div class="checkmark" id="signat">
+      <label for="sig1" class="on-doc">Signature</label>
+      <input type="file" id="sig1" accept=".txt" />
+      <div class="sign-done">
+        <button id="sign-button1">Submit</button>
+      </div>
+    </div>
+  
+    <div class="checkmark" id="marko">
+      <!-- <label for="for" class="on-doc">Mark As Done</label>
+      <input type="checkbox" id="for" name="interest" value="for" class="check" /> -->
+      <div id="checkmark-container"></div>
+    </div>
+  
+    
+  </div>
+  <div class="checkmark" id="appro">
+    <label for="sig2" class="on-doc">Approved</label>
+    <input type="file" id="sig2" accept=".txt" />
+    <div class="sign-done">
+      <button id="sign-button2">Submit</button>
+    </div>
+  </div>
+  <div class="doc-desc">
+    <h2 class="do-desc">Description</h2>
+    <div class="main-doc-des">
+      <p class="para-desc" id = "para-desc">
+
+      </p>
+    </div>
+  </div>
+  <div class="Time">
+    <h2 class="do-desc">Timeline</h2>
+    <ul class="timeline" id="timeline"></ul>
+  
+    <div class="input" id="add-entry-form">
+      <label for="title" class="form-label">Add Tag</label>
+      <select id="title" name="title" class="my-input"></select>
+      <div class="sign-done tag-add-btn" >
+        <button id="signad-button">Submit</button>
+      </div>
+    </div>
+  </div>
+  <div class="popup hidden">Request accepted Successfully.</div>
+
+  <div class="flexing">
+    <div class="sub-flexing">
+      <div class="sign-ver-app">
+        <button id="sign-button4">Verify Signature</button>
+      </div>
+      <div class="sign-ver-app">
+        <button id="sign-button3">Verify Approval</button>
+      </div>
+    </div>
+    <div>
+      <h1 class="sig-head">Signatured By</h1>
+      <div class="sign-flex" id="signature-container"></div>
+    </div>
+  </div>
+  
+  <script src="../logic/document_script.js"></script>
+</body>
+
+</html>

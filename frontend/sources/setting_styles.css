@@ -1,0 +1,492 @@
+* {
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+    color: white;
+margin:0;
+}
+html {
+  font-size: 62.5%;
+  font-family: 'Poppins', sans-serif;
+}
+body {
+  margin: 0;
+  background-color: #031639;
+  padding: 0;
+  font-size: 62.5%; /* Define 1rem = 10px */
+}
+
+.header {
+  position: sticky;
+  z-index: 4;
+  top: 0;
+}
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #000b1f;
+  color: #fff;
+  height: 8rem;
+}
+
+.logo-img {
+  width: 7rem;
+  height: 8rem;
+}
+
+.company-name {
+  margin-left: 1rem;
+  font-size: 4.8rem;
+}
+
+.search-bar {
+  flex-grow: 1;
+  margin-right: 1rem;
+  text-align: right;
+  position: relative;
+}
+
+.search-bar input {
+  width: 30rem;
+  padding: 0.8rem;
+  border-radius: 2rem;
+  border: none;
+  outline: none;
+  background: linear-gradient(to right, #1e2749, #18353f);
+  color: #ffffff;
+}
+
+.side-img {
+  height: 3rem;
+  width: 3rem;
+  margin-left: 2rem;
+}
+
+.sidebar-list {
+  background-color: #000b1f;
+  height: 100%;
+  width: 7rem;
+  position: fixed;
+  flex-direction: column;
+  align-items: center;
+}
+
+.sidebar {
+  padding: 1rem 0;
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  gap: 3rem;
+}
+
+.sidebar li:last-child {
+  position: absolute;
+  bottom: 10rem;
+}
+
+/* .sidebar li:hover {
+  background-color: #333;
+} */
+
+.main-content {
+  background-color: #031639;
+  height: 100vh;
+  width: 100%;
+  margin: 0;
+}
+
+.content {
+  margin-left: 9rem;
+  color: #ffffff;
+  /* background-color: #0A204A; */
+}
+
+.whole-section{
+  margin-left: 10rem;
+}
+
+  .title{
+    padding-top: 2rem;
+    padding-left: 1rem;
+    font-size:3rem;
+    font-weight: 300;
+    margin-bottom: 2rem;
+    margin-left: 2rem;
+  }
+
+  .sec_title{
+    padding-top: 2rem;
+    padding-left: 1rem;
+    font-size:1.6rem;
+    font-weight: 300;
+    margin-bottom: 2rem;
+  }
+
+
+.generate-seting-list{
+  font-size: 2rem;
+  margin-top:6rem;
+  margin-left: 3rem;
+}
+
+
+/* Add your existing styles here */
+
+/* Modal styles */
+/* Add your existing styles here */
+
+/* Modal styles */
+/* Modal styles */
+/* Modal styles */
+
+.pass-input,.pass-pass-input{
+font-size: 1.6rem;
+margin-right: 2rem;
+}
+.pass-pass-input{
+  color: #000 !important;
+}
+
+.generate-modal-content, .pass-generate-modal-content {
+  background-color: white;
+  color: black;
+  margin: 15% auto;
+  padding: 20px;
+  /* display: none; */
+  border: 1px solid #888;
+  width: 80%;
+  max-width: 400px;
+  position: relative;
+  /* Remove the height property */
+  /* height: 80%; */
+  overflow-y: auto;
+}
+
+.generate-modal-content , .pass-generate-modal-content{
+  background-color: white;
+  color: black;
+  margin: 15% auto;
+  /* display: none; */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  height: 80%;
+  max-width: 400px;
+  position: relative;
+}
+
+.generate-close, .pass-generate-close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.generate-close:hover,.pass-generate-close:hover ,
+.generate-close:focus,.pass-generate-close :focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* Button styles */
+#generate-button, #generate-user {
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  margin-bottom: 4rem;
+  cursor: pointer;
+}
+
+#generate-button:hover {
+  background-color: #45a049;
+}
+
+#password-submit, #pass-password-submit {
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 2rem;;
+}
+
+#password-submit:hover ,#pass-password-submit:hover{
+  background-color: #45a049;
+}
+
+/* Form styles */
+label {
+  color: black; 
+}
+
+input[type="password"],
+input[type="text"] {
+  color: black; 
+}
+
+
+.generate-modal-content , .pass-generate-modal-content{
+  background-color: white;
+  color: black;
+  /* ... */
+}
+
+#result-modal-content {
+  background-color: white;
+  color: black;
+  /* ... */
+}
+
+#generate-modal-data {
+  color: black;
+  word-wrap: break-word;
+  font-size: 1rem;
+
+}
+
+
+/*                       */
+.user-generate-modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.custom-modal-content {
+  background-color: #fefefe;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 50%;
+  max-width: 500px;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.user-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.vertical-label {
+  font-size: 1.6rem;
+  margin-bottom: 5px;
+}
+body.modal-open {
+  filter: blur(10px);
+  pointer-events: none;
+}
+.vertical-input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  color: #000 !important;
+}
+
+.submit-btn {
+  background-color: #4caf50;
+  margin-top: 2rem;
+  color: white;
+  padding: 10px 20px;
+  align-self: center;
+  width: 25%;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.submit-btn:hover {
+  background-color: #45a049;
+}
+
+/*                       */
+
+.generate-modal , .pass-generate-modal{
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60rem;
+  max-height: calc(100vh - 20px);
+  overflow-y: auto;
+  /* Add additional styling for the modal */
+}
+.label-pass{
+  margin-bottom: 2rem !important;
+}
+@media screen and (max-width: 1000px) {
+  .navbar {
+    height: 6rem;
+  }
+
+  .logo-img {
+    width: 6rem;
+    height: 6rem;
+  }
+
+  .company-name {
+    font-size: 3.6rem;
+  }
+
+  .search-bar input {
+    width: 20rem;
+  }
+
+  .sidebar-list {
+    width: 6rem;
+  }
+
+  .content {
+    margin-left: 7rem;
+  }
+
+  .whole-section {
+    margin-left: 8rem;
+  }
+
+  .document-section {
+    flex: 4;
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
+
+  .highlighted_card,
+  .document-card {
+    width: 18rem;
+    margin-left: 2rem;
+    margin-right: 2rem;
+  }
+
+  .title {
+    font-size: 2.4rem;
+  }
+}
+
+/* Responsive styles for screen width 800px and below */
+@media screen and (max-width: 800px) {
+  .navbar {
+    height: 6rem;
+  }
+
+  .logo-img {
+    width: 6rem;
+    height: 6rem;
+  }
+
+  .company-name {
+    font-size: 3.6rem;
+  }
+
+  .search-bar input {
+    width: 20rem;
+  }
+
+  .sidebar-list {
+    width: 6rem;
+  }
+
+  .content {
+    margin-left: 7rem;
+  }
+
+  .whole-section {
+    margin-left: 8rem;
+  }
+
+  .document-section {
+    flex: 4;
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
+
+  .highlighted_card,
+  .document-card {
+    width: 18rem;
+    margin-left: 2rem;
+    margin-right: 2rem;
+  }
+
+  .title {
+    font-size: 2.4rem;
+  }
+}
+
+
+@media screen and (max-width: 600px) {
+  .navbar {
+    height: 4rem;
+    width:100%
+  }
+
+  .logo-img {
+    width: 4rem;
+    height: 4rem;
+  }
+
+  .company-name {
+    font-size: 2.4rem;
+  }
+
+  .search-bar input {
+    width: 12rem;
+  }
+
+  .sidebar-list {
+    width: 4.4rem;
+  }
+
+  .side-img {
+    width: 2rem;
+    height: 2rem;
+  }
+  .content {
+    margin-left: 7rem;
+  }
+
+  .whole-section {
+    margin-left: 8rem;
+  }
+
+  .document-section {
+    flex: 4;
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
+
+  .highlighted_card,
+  .document-card {
+    width: 14rem;
+    height:14rem;
+    margin-left: 2rem;
+    margin-right: 2rem;
+  }
+
+  .title {
+    font-size: 1.2rem;
+  }
+}

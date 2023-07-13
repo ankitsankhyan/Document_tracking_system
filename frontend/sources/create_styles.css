@@ -1,0 +1,434 @@
+* {
+  box-sizing: border-box;
+  color: #fff;
+  margin:0;
+
+}
+html {
+  font-size: 62.5%;
+  font-family: 'Poppins', sans-serif;
+}
+body {
+  margin: 0;
+  background-color: #031639;
+  padding: 0;
+  font-size: 62.5%; /* Define 1rem = 10px */
+}
+
+.header {
+  position: sticky;
+  z-index: 4;
+  top: 0;
+}
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #000b1f;
+  color: #fff;
+  height: 8rem;
+}
+
+.logo-img {
+  width: 7rem;
+  height: 8rem;
+}
+
+.company-name {
+  margin-left: 1rem;
+  font-size: 4.8rem;
+}
+
+.search-bar {
+  flex-grow: 1;
+  margin-right: 1rem;
+  text-align: right;
+  position: relative;
+}
+
+.search-bar input {
+  width: 30rem;
+  padding: 0.8rem;
+  border-radius: 2rem;
+  border: none;
+  outline: none;
+  background: linear-gradient(to right, #1e2749, #18353f);
+  color: #ffffff;
+}
+
+.side-img {
+  height: 3rem;
+  width: 3rem;
+  margin-left: 2rem;
+}
+
+.sidebar-list {
+  background-color: #000b1f;
+  height: 100%;
+  width: 7rem;
+  position: fixed;
+  flex-direction: column;
+  align-items: center;
+}
+
+.sidebar {
+  padding: 1rem 0;
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  gap: 3rem;
+}
+
+.sidebar li:last-child {
+  position: absolute;
+  bottom: 10rem;
+}
+
+/* .sidebar li:hover {
+  background-color: #333;
+} */
+
+.main-content {
+  background-color: #031639;
+  height: 100vh;
+  width: 100%;
+  margin: 0;
+}
+
+.content {
+  margin-left: 9rem;
+  color: #ffffff;
+  /* background-color: #0A204A; */
+}
+
+
+  .whole-section{
+    margin-left: 10rem;
+  }
+
+  .title{
+    padding-top: 2rem;
+    padding-left: 1rem;
+    font-size:3rem;
+    font-weight: 300;
+    margin-bottom: 2rem;
+    margin-left: 2rem;
+  }
+
+  .box{
+  border: 1px solid #aaa;
+  border-radius: 8px;
+  padding-top: 2rem;
+  padding-left: 1rem;
+  width: 92%;
+  height: 100%;
+  margin-left:5rem ;
+  margin-right: 4rem;
+  padding-bottom: 3rem;
+}
+
+.heading{
+  display: flex;
+}
+
+.name{
+    font-size:2.5rem;
+    padding-left: 1.5rem;
+    margin-bottom: 2rem;
+    font-weight: 300;
+  }
+
+
+
+.online{
+    padding-top: 2rem;
+    padding-right: 6rem;
+    margin-left: auto;
+    margin-top: 2rem;
+    display: flex;
+    vertical-align:bottom;
+}
+
+.on{
+  font-size:1.5rem;
+  /* padding-bottom: 1.5rem; */
+}
+
+.check{
+  margin-left: 1rem;
+}
+
+.my-form {
+  background: linear-gradient(rgba(105, 89, 89, 0.2), rgba(126, 125, 125, 0.2)); 
+  backdrop-filter: blur(10px);  
+  padding: 2rem;
+  margin-right:3rem;
+  margin-left: 2rem;
+  margin-top: 1rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.1);
+}
+
+.container {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 2rem;
+  gap: 2rem;
+}
+
+.form-label{
+  font-size: 1.6rem;
+}
+
+.input {
+  flex-grow: 1;
+  margin-right: 1rem;
+}
+
+.my-input {
+  background-color: rgba(255, 255, 255, 0.1);
+  width: 100%;
+  padding: 0.5rem;
+  color: #fff;
+  height: 4rem;
+  border: none;
+  font-size: 1.6rem;
+  border-radius: 0.3rem;
+  outline: none;
+}
+
+.my-des{
+  height: 14rem;
+}
+
+.button {
+  margin: 1rem;
+  text-align: center;
+}
+
+.my-button {
+  padding: 1rem;
+  background-color: #116c14;
+  color: #fff;
+  border: none;
+  border-radius: 0.4rem;
+  cursor: pointer;
+  font-size: 1.6rem;
+  
+}
+
+.my-button:hover {
+  background-color: #45a049;
+}
+
+
+.my-input option {
+  background-color: white; /* Set background color of each option */
+  color: black; /* Set text color of each option */
+}
+
+.my-input option:hover {
+  background-color: lightgray; /* Set background color of hovered option */
+}
+
+.my-input option:checked {
+  background-color: lightblue; /* Set background color of selected option */
+}
+
+
+.popup {
+  position: fixed;
+  height: 16rem;
+  font-size: 2rem;
+  color: rgb(11, 26, 39);
+  width: 26rem;
+  top: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(to bottom right, #34b7ce, #0b5b6a);
+  padding: 10px;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  opacity: 1; 
+}
+
+.popup.hidden {
+  display: none;
+}
+
+@keyframes blast {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+
+@media screen and (max-width: 1000px) {
+  .navbar {
+    height: 6rem;
+  }
+
+  .logo-img {
+    width: 6rem;
+    height: 6rem;
+  }
+
+  .company-name {
+    font-size: 3.6rem;
+  }
+
+  .search-bar input {
+    width: 20rem;
+  }
+
+  .sidebar-list {
+    width: 6rem;
+  }
+
+  .content {
+    margin-left: 7rem;
+  }
+
+  .whole-section {
+    margin-left: 8rem;
+  }
+
+  .document-section {
+    flex: 4;
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
+
+  .highlighted_card,
+  .document-card {
+    width: 18rem;
+    margin-left: 2rem;
+    margin-right: 2rem;
+  }
+
+  .title, .name {
+    font-size: 2.4rem;
+  }
+}
+
+/* Responsive styles for screen width 800px and below */
+@media screen and (max-width: 800px) {
+  .navbar {
+    height: 6rem;
+  }
+
+  .logo-img {
+    width: 6rem;
+    height: 6rem;
+  }
+
+  .company-name {
+    font-size: 3.6rem;
+  }
+
+  .search-bar input {
+    width: 20rem;
+  }
+
+  .sidebar-list {
+    width: 6rem;
+  }
+
+  .content {
+    margin-left: 7rem;
+  }
+
+  .whole-section {
+    margin-left: 8rem;
+  }
+
+  .document-section {
+    flex: 4;
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
+
+  .highlighted_card,
+  .document-card {
+    width: 18rem;
+    margin-left: 2rem;
+    margin-right: 2rem;
+  }
+
+  .title, .name{
+    font-size: 1.8rem;
+  }
+  .box{
+    margin-left:1rem;
+  }
+}
+
+
+@media screen and (max-width: 600px) {
+  .navbar {
+    height: 4rem;
+    width:100%
+  }
+
+  .logo-img {
+    width: 4rem;
+    height: 4rem;
+  }
+
+  .company-name {
+    font-size: 2.4rem;
+  }
+
+  .search-bar input {
+    width: 12rem;
+  }
+
+  .sidebar-list {
+    width: 4.4rem;
+  }
+
+  .side-img {
+    width: 2rem;
+    height: 2rem;
+  }
+  .content {
+    margin-left: 7rem;
+  }
+
+  .whole-section {
+    margin-left: 8rem;
+  }
+
+  .document-section {
+    flex: 4;
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
+
+  .highlighted_card,
+  .document-card {
+    width: 14rem;
+    height:14rem;
+    margin-left: 2rem;
+    margin-right: 2rem;
+  }
+
+  .title, .name{
+    font-size: 1.2rem;
+  }
+}

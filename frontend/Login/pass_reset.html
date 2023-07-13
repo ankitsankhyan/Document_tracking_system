@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="pass_reset.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300&family=Poppins:wght@200;400&display=swap"
+    rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400&family=Noto+Sans:wght@300&display=swap"
+    rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h2>Change Password</h2>
+        <form id="passwordForm" onsubmit="return validateForm()">
+          <div class="form-group">
+            <label for="newPassword" class="pass">New Password:</label>
+            <input type="password" id="newPassword" required>
+          </div>
+          <div class="form-group">
+            <label for="confirmPassword" class="pass">Confirm Password:</label>
+            <input type="password" id="confirmPassword" required>
+          </div>
+          <div class="button-container">
+            <button id="submitPassword" type="submit">Submit</button>
+          </div>
+        </form>
+      </div>
+    
+      <!-- <div id="popup" class="popup">
+        <div class="popup-content">
+          <p>New Password does not match with Confirm Password.</p>
+          <button onclick="closePopup()">OK</button>
+        </div>
+      </div> -->
+  <div class="popup hidden">Request accepted Successfully.</div>
+
+      <script src="app/js/pass_reset.js">
+    </script>
+</body>
+</html>

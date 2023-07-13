@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Page
+  </title>
+  <link rel="stylesheet" href="./app/scss/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300&family=Poppins:wght@200;400&display=swap"
+    rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400&family=Noto+Sans:wght@300&display=swap"
+    rel="stylesheet">
+</head>
+
+<body>
+
+  <!-- <div class="frame30">
+
+  </div> -->
+  <div class="container">
+    <section class="frame30">
+
+      <div class="frame30__login-essntials">
+
+        <div class="frame30__login-essntials__greetings">
+          <p>Welcome back</p>
+          <h2>Log In</h2>
+        </div>
+
+        <div class="frame30__login-essntials__mail-group">
+          <p>Email</p>
+          <input type="text" placeholder="login@gmail.com" required="required" class="input-box" id="mail_input">
+        </div>
+
+        <div class="frame30__login-essntials__password-group">
+          <p>Password</p>
+          <input type="password" placeholder="******" required="required" class="input-box" id="password_input">
+        </div>
+        <div class="for-pass-div">
+          <a class="for-pass" href="#" onclick="openModal()">Forget Password</a>
+        </div>
+        
+        <div id="myModal" class="modal">
+          <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 class="forgot-password-head">Forgot Password</h2>
+            <input type="email" id="emailInput" placeholder="Enter your email" />
+            <button class="submit-button" id="submitForgetEmail">Submit</button>
+          </div>
+        </div>
+        <div class="frame30__login-essntials__btn">
+          <button type="button" id="login-button">LOGIN IN</button>
+        </div>
+
+
+      </div>
+ 
+
+      <div class="frame30__image">
+        <img src="./img/images- middle.jpeg">
+      </div>
+
+      <div class="frame30__sub_frame">
+        <img src="./img/images-bottom.jpeg" alt="" class="frame30__sub_frame__topimg">
+        <img src="./img/images.jpeg" alt="" class="frame30__sub_frame__bottomimg">
+      </div>
+  </div>
+
+  </section>
+  <div class="popup hidden">Request accepted Successfully.</div>
+  
+  <script src="app/js/script.js">
+  </script>
+</body>
+
+</html>

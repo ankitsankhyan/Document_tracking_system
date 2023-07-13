@@ -1,0 +1,296 @@
+html {
+  font-size: 100%;
+  box-sizing: border-box;
+}
+
+*, *::after, *::before {
+  box-sizing: inherit;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: blue;
+  background-color: #0F1727;
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100vw;
+}
+.container .frame30 {
+  height: 80vh;
+  width: 80vw;
+  background: #AC5252;
+  border-radius: 70px;
+  display: flex;
+  justify-content: space-between;
+}
+.container .frame30__login-essntials {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-left: 5%;
+}
+.container .frame30__login-essntials p {
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  font-size: 0.9rem;
+  line-height: 22px;
+  color: #000000;
+}
+.container .frame30__login-essntials h2 {
+  font-family: "Inter", sans-serif;
+  font-weight: 400;
+  font-size: 2.2rem;
+  color: whitesmoke;
+}
+.container .frame30__login-essntials__greetings {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.container .frame30__login-essntials__greetings p {
+  margin-top: 10px;
+  margin-bottom: -4.6px;
+  padding-bottom: 7px;
+}
+.container .frame30__login-essntials__greetings h2 {
+  margin-top: 0;
+  padding-top: 0;
+}
+.container .frame30__login-essntials__mail-group {
+  margin-bottom: 1.2rem;
+}
+.container .frame30__login-essntials__mail-group p {
+  padding-bottom: 0;
+  margin-bottom: 1rem;
+}
+.container .frame30__login-essntials__mail-group input {
+  width: 18.75rem;
+  height: 1.8rem;
+  background: rgba(0, 0, 0, 0.2);
+  outline: none;
+  transition: 0.2s ease;
+  border-radius: 2.1px;
+  border: transparent;
+  font-weight: 400;
+}
+.container .frame30__login-essntials__mail-group input:hover, .container .frame30__login-essntials__mail-group input:focus {
+  background: rgba(255, 255, 255, 0.25);
+}
+.container .frame30__login-essntials__mail-group ::-webkit-input-placeholder {
+  color: #fff;
+}
+.container .frame30__login-essntials__password-group p {
+  padding-bottom: 0;
+  margin-bottom: 1rem;
+}
+.container .frame30__login-essntials__password-group input {
+  width: 18.75rem;
+  height: 1.8rem;
+  background: rgba(0, 0, 0, 0.2);
+  outline: none;
+  transition: 0.2s ease;
+  border-radius: 2.1px;
+  border: transparent;
+  font-weight: 400;
+}
+.container .frame30__login-essntials__password-group input:hover, .container .frame30__login-essntials__password-group input:focus {
+  background: rgba(255, 255, 255, 0.25);
+}
+.container .frame30__login-essntials__password-group ::-webkit-input-placeholder {
+  color: #fff;
+}
+.container .frame30__login-essntials__btn {
+  margin-top: 20px;
+  padding-left: 70px;
+}
+.container .frame30__login-essntials__btn button {
+  cursor: pointer;
+  color: whitesmoke;
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  margin: 25px;
+  font-size: 0.7rem;
+  height: 30px;
+  width: 100px;
+  border-radius: 30px;
+  background-color: hsl(0, 48%, 63%);
+  border: transparent;
+  transition: 0.3s ease-in-out;
+  transition-property: box-shadow, transform;
+}
+.container .frame30__login-essntials__btn button:hover, .container .frame30__login-essntials__btn button:focus, .container .frame30__login-essntials__btn button:active {
+  background: rgba(206, 115, 115, 0.5);
+  box-shadow: 1px 5px 7px 1px rgba(0, 0, 0, 0.2);
+}
+.container .frame30__image {
+  top: -175px;
+  bottom: 20px;
+  width: 25%;
+  margin-left: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.container .frame30__image img {
+  left: 100px;
+  height: 28%;
+  width: 100%;
+  border-radius: 30px;
+}
+.container .frame30__sub_frame {
+  background: #dea6a6;
+  width: 300px;
+  border-top-right-radius: 70px;
+  border-bottom-right-radius: 70px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+.container .frame30__sub_frame__topimg {
+  position: relative;
+  width: 100%;
+  height: 25%;
+  border-radius: 20px;
+  right: 50px;
+  bottom: 50px;
+}
+.container .frame30__sub_frame__bottomimg {
+  position: relative;
+  width: 100%;
+  height: 25%;
+  border-radius: 20px;
+  top: 50px;
+  right: 50px;
+}/*# sourceMappingURL=style.css.map */
+
+img{
+  width:12rem !important;
+}
+
+.for-pass{
+  margin-left:-9rem;
+}
+.for-pass-div{
+  margin-top:.5rem;
+  color:rgb(255, 255, 255);
+}
+
+/* Modal styles */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 300px;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* Other styles */
+.for-pass-div {
+  text-align: center;
+}
+
+.for-pass {
+  cursor: pointer;
+}
+
+input[type="email"],
+button {
+  margin-top: 10px;
+}
+
+.submit-button {
+  background-color: #4caf50;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.submit-button:hover {
+  background-color: #45a049;
+}
+.forgot-password-head{
+  color: #000000 !important;
+}
+
+
+.popup {
+  position: fixed;
+  height: 16rem;
+  font-size: 2rem;
+  color: rgb(11, 26, 39);
+  width: 26rem;
+  top: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(to bottom right, #34b7ce, #0b5b6a);
+  padding: 10px;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  opacity: 1; 
+}
+
+.popup.hidden {
+  display: none;
+}
+.for-pass{
+  color: #fefefe !important;
+  margin-left:-6rem;
+  text-decoration: none;
+}
+@media screen and (max-width: 800px)
+{
+  .input-box{
+    width:14rem !important;
+  }
+
+  img{
+    display:none;
+  }
+  .for-pass{
+    color: #fefefe !important;
+    margin-left:-6rem;
+  }
+}
+

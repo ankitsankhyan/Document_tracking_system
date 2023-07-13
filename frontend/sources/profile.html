@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>My Web Page</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="profile_styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&family=Roboto:ital,wght@0,100;1,300&family=Rubik:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+</head>
+
+<body>
+  <header class="header">
+    <div class="navbar">
+      <div class="logo"><img src="../img/logo.JPG" class="logo-img" /></div>
+      <div class="company-name">Doctrac</div>
+      <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="Search Users" />
+      </div>
+    </div>
+  </header>
+  <div id="searchContainer">
+    <!-- search result are printed here -->
+  </div>
+  <section class="main">
+    <div class="sidebar-list">
+      <ul class="sidebar">
+        <li>
+          <a href="dashboard.html">
+            <img class="side-img" src="../img/layout.png" alt="dashboard" />
+          </a>
+        </li>
+        <li>
+          <a href="profile.html">
+            <img class="side-img" src="../img/profile.png" alt="profile" />
+          </a>
+        </li>
+        <li>
+          <a href="create.html">
+            <img class="side-img" src="../img/plus.png" alt="create" />
+          </a>
+        </li>
+        <li>
+          <a href="setting.html">
+            <img class="side-img" src="../img/cogwheel.png" alt="setting" />
+          </a>
+        </li>
+        <li>
+          <p id="logout">
+            <img class="side-img" src="../img/logout.png" alt="logout" />
+          </p>
+        </li>
+      </ul>
+    </div>
+    <section class="whole-section">
+      <div class="heading">
+        <h1 class="title">Faculty</h1>
+        <div class="edit">
+          <a id="editLink" href="#">
+            <img src="../img/edit.png" class="ed-photo">
+          </a>
+        </div>
+      </div>
+      <div class="box">
+        <h2 class="name" id="usr_name">Dr. Santosh Singh Rathore</h2>
+        <div class="about">
+          <div class="things">
+            <ul>
+              <li class="list">
+                <span class="spanned">Department: </span>
+                <span id="department" class="ram" id="usr_depr">Computer Science</span>
+              </li>
+             
+              <li class="list">
+                <span class="spanned">Section: </span>
+                <span id="usr_sec" class="ram">Academics</span>
+              </li>
+              <li class="list">
+                <span class="spanned">Designation: </span>
+                <span id="usr_depr" class="ram">Professor</span>
+              </li>
+            
+          
+              <li class="list">
+                <span class="spanned">Email: </span>
+                <span id="usr_email" class="ram">santoshs@iiitm.ac.in</span>
+              </li>
+            </ul>
+          </div>
+          <div class="photo">
+            <img src="../img/santosh_sir.jpg" id="profilePhoto" alt="profile photo" class="dp">
+          </div>
+        </div>
+      
+        <div class="things-doc">
+          <ul>
+            <li class="list" ><span class="spanned">Document Created: </span><div id="created-doc-count">Loading...</div></li>
+            <li class="list" ><span class="spanned">Document Tagged: </span><div id="tagged-doc-count">Loading...</div></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </section>
+
+  <div class="user-generate-modal custom-modal">
+    <div class="user-generate-modal-content custom-modal-content">
+      <span class="close">&times;</span>
+      <form id="user-form" class="user-form">
+        <label for="name" class="vertical-label">Name:</label>
+        <input type="text" id="name" name="name" class="vertical-input" required>
+        <label for="password" class="vertical-label">Password:</label>
+        <input type="password" id="password" name="password" class="vertical-input" required>
+        <label for="designation" class="vertical-label">Designation:</label>
+        <input type="text" id="designation" name="designation" class="vertical-input" required>
+        <label for="section" class="vertical-label">Section:</label>
+        <input type="text" id="section" name="section" class="vertical-input" required>
+        <label for="email" class="vertical-label">Email:</label>
+        <input type="email" id="email" name="email" class="vertical-input" required>
+        <label for="photo" class="vertical-label">Photo:</label>
+        <input type="file" id="photo" name="avatar" class="vertical-input" >
+        <button type="submit" class="submit-btn">Submit</button>
+      </form>
+    </div>
+  </div>
+
+
+  <div class="popup hidden">Your data has been updated!</div>
+  <script src="../logic/profile_script.js"></script>
+  <script>
+    const handleLogout = () => {
+      console.log('running');
+
+      localStorage.removeItem('responseData');
+      isLogin();
+    }
+    const logout = document.getElementById('logout');
+    console.log(logout);
+    logout.addEventListener('click', handleLogout);
+  </script>
+</body>
+
+</html>
