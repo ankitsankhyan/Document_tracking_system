@@ -280,6 +280,7 @@ module.exports.getAccessDoc = async (req,res)=>{
   console.log(req.user);
   const doc_id = req.params.id;
   const user_id = req.user.id;
+  
   const authorise = await Authorise.findOne({document_id:doc_id,user_id:user_id});
   if(!authorise){
     res.status(400).json({
@@ -290,12 +291,12 @@ module.exports.getAccessDoc = async (req,res)=>{
 
   const doc = await Document.findById(doc_id).populate('createdBy','name email');
   console.log(authorise);
-  // if(doc.section === req.user.section){
-  //   res.status(200).json({
-  //     data:doc
-  //   })
-  //   return;
-  // }
+  if(doc.section==='public' || doc.section === req.user.section){
+    res.status(200).json({
+      data:doc
+    });
+    return;
+  }
   if(authorise){
     res.status(200).json({
       data:doc
