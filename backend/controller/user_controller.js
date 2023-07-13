@@ -52,11 +52,6 @@ module.exports.createUser = async (req, res) => {
          message:"image upload failed"
       });
     }
-   
-    
-  
-         
-
     res.status(200).json({
       data: newUser,
     });
@@ -64,7 +59,7 @@ module.exports.createUser = async (req, res) => {
 };
 
 module.exports.updateCredentials = async (req, res) => {
-      console.log(req.body);
+     
     
     const { name, email, password, designation,section } = req.body;
     console.log(req.body);
@@ -190,7 +185,7 @@ console.log(email);
   console.log(user);
   if (user.length === 0) {
     console.log("user does not exist");
-    res.status(200).json({
+    res.status(400).json({
       data: "User does not exist",
     });
     return;
@@ -209,6 +204,7 @@ console.log(email);
       designation: user[0].designation,
       section:user[0].section,
       token: generateToken(user[0].id),
+      avatar:user[0].avatar
     });
     return;
   } else {
@@ -253,8 +249,10 @@ module.exports.generatePublicKey = async (req, res) => {
 };
 
 module.exports.getProfile = async (req,res) => {
+
      const id = req.params.id;
-     const user = await User.findById(id);
+     console.log(id);
+     const user = await User.findById(id).select('name email section designation avatar');
       if(!user){
         res.status(401).json({
           message : "User does not exist"
@@ -263,20 +261,20 @@ module.exports.getProfile = async (req,res) => {
       }
 
       res.status(200).json({
-        name : user.name,
-        email : user.email,
-        designation : user.designation,
-        section : user.section
+        data:user
       })
+     
 
 }
 
 // password verification
 module.exports.generatelink = async (req, res) => {
   const {email} = req.body;
+  console.log(req.body);
   const token = await generateRandomBytes();
   
   const user = await User.findOne({email : email});
+  console.log(user,email);
   if(!user){
     res.status(400).json({
       message : "User does not exist"
@@ -294,12 +292,12 @@ module.exports.generatelink = async (req, res) => {
     userId : user._id,
    
   });
-  const link = `http://localhost:3000/resetpassword?token=${token}&user_id=${user._id}`;
+  const link = `http://127.0.0.1:5500/Login/pass_reset.html?token=${token}&user_id=${user._id}`;
   try{
     const transporter = generateMailTransporter();
     transporter.sendMail({
       from:'doctracksys@gmail.com',
-      to:'ut2002mishra@gmail.com',
+      to:'ankitsankhyan04@gmail.com',
       subject:'Reset Password Link',
       html:`
       <p> Click here to reset password</p>
@@ -328,14 +326,16 @@ module.exports.verifyLink = async(req, res)=>{
 module.exports.resetPassword = async(req, res)=>{
    const {password, confirmPassword} = req.body;
    if(password !== confirmPassword){
-     req.status(200).json({
+     res.status(400).json({
         message : "Password and confirm password does not match"
       });
    }
+  
+   const updateUser = await User.findById(req.user._id);
+  console.log(updateUser);
+   updateUser.password = password;
 
-   const updateUser = await User.findByIdAndUpdate(req.user._id,{
-    ...req.user,password : password
-   })
+  await updateUser.save();
   await PasswordResetToken.findOneAndDelete({userId : req.user._id});
   res.status(200).json({
     message : "Password reset successfully",
@@ -344,6 +344,7 @@ module.exports.resetPassword = async(req, res)=>{
 }
 
 module.exports.changePassword = async(req, res)=>{
+  console.log(req.user);
   const {oldPassword, newPassword, confirmNewPassword} = req.body;
   if(newPassword !== confirmNewPassword){
     res.status(200).json({
@@ -354,7 +355,7 @@ module.exports.changePassword = async(req, res)=>{
   const user = await User.findById(req.user._id);
   const isMatch = await bcrypt.compare(oldPassword,user.password);
   if(!isMatch){
-    res.status(200).json({
+    res.status(400).json({
       message : "Old password is not correct"
     });
     return;
@@ -365,3 +366,33 @@ module.exports.changePassword = async(req, res)=>{
     message : "Password changed successfully"
   });
 }
+
+module.exports.getUsers = async(req,res)=>{
+  const users = await User.find().select('-password').select('-publicKey');
+  res.status(200).json({
+    data : users
+  });
+
+
+}
+
+module.exports.searchUser = async(req,res)=>{
+ const keyword = req.params.keyword;
+ console.log(keyword);
+  const users = await User.find(
+   {
+    $or: [
+      { name: { $regex: keyword, $options: "i" } },
+      { email: { $regex: keyword, $options: "i" } },
+      { designation: { $regex: keyword, $options: "i" } },
+      { section: { $regex: keyword, $options: "i" } },
+
+    ]
+   }
+  ).select('name avatar');
+
+  res.status(200).json({
+    data : users
+  })
+}
+

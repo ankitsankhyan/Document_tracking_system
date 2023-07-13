@@ -1,4 +1,4 @@
-const Tag = require('../Model/Tag');
+const Tag = require('../Model/tag');
 const User = require('../Model/user');
 const Document = require('../Model/document');
 const Authorise = require('../Model/authorize');

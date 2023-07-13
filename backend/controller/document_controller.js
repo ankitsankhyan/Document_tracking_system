@@ -1,5 +1,5 @@
 const Assigned = require('../Model/assigned');
-const Tag  = require("../Model/Tag");
+const Tag  = require("../Model/tag");
 const User = require("../Model/user.js");
 const rsa = require('node-rsa');
 const Authorise = require('../Model/authorize');
@@ -250,10 +250,9 @@ module.exports.searchDoc = async (req, res) => {
       const documents = await Document.find({ 
         $or: [
           { title: { $regex: keyword, $options: 'i' } },
-          { description: { $regex: keyword, $options: 'i' }},
           { section: { $regex: keyword, $options: 'i' }}
         ],
-      });
+      }).populate('createdBy').select('title section createdBy');
 
       for (const doc of documents) {
         const isDuplicate = alldocs.some(existingDoc => existingDoc._id.toString() === doc._id.toString());
@@ -282,7 +281,12 @@ module.exports.getAccessDoc = async (req,res)=>{
   const doc_id = req.params.id;
   const user_id = req.user.id;
   const authorise = await Authorise.findOne({document_id:doc_id,user_id:user_id});
- 
+  if(!authorise){
+    res.status(400).json({
+      message:'you are not authorised to view this document'
+    });
+    return;
+  }
 
   const doc = await Document.findById(doc_id).populate('createdBy','name email');
   console.log(authorise);
@@ -476,7 +480,9 @@ module.exports.verifyapproval = async (req,res)=>{
 
 module.exports.verifySignature = async (req,res)=>{
         const id = req.params.id;
+
         const doc = await Document.findById(id);
+        console.log(doc,'H\nH\nH\nH\nH');
         if(!doc){
           res.status(400).json({
             message:'doc not found'
@@ -492,12 +498,9 @@ module.exports.verifySignature = async (req,res)=>{
             try{
             const decrypted = public_key.decryptPublic(signatures[i].signature,'utf8');
               
-            }catch(e){
-              res.status(400).json({
-                message:'Signature is not Authentic for ' + signatures[i].email
-              });
-              return;
-            }
+           
+         
+            
 
             if(decrypted !== signatures[i].email){
               res.status(400).json({
@@ -505,6 +508,13 @@ module.exports.verifySignature = async (req,res)=>{
               });
               return;
             }
+          }catch(e){
+                 console.log(e);
+                 res.status(400).json({
+                  message:'Signature is not Authentic for ' + signatures[i].email
+                });
+                return;
+          }
           
         }
 

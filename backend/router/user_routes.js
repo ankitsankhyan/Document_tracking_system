@@ -14,9 +14,11 @@ router.post('/updatePassword', UsersFuctions.updatePassword);
 router.post('/createUser',uploadImage.single('avatar'), UsersFuctions.createUser);
 router.post('/login', UsersFuctions.login);
 router.post('/generateKeys',protect, UsersFuctions.generatePublicKey);
-router.get('/profile', UsersFuctions.getProfile);
-router.get('/resetLink', UsersFuctions.generatelink);
-router.get('/verifyLink',verifyToken, UsersFuctions.verifyLink);
+router.get('/profile:id', UsersFuctions.getProfile);
+router.post('/resetLink', UsersFuctions.generatelink);
+router.post('/verifyLink',verifyToken, UsersFuctions.verifyLink);
 router.post('/resetPassword', verifyToken, UsersFuctions.resetPassword)
 router.patch('/changePassword',protect, UsersFuctions.changePassword);
+router.get('/search:keyword',protect, UsersFuctions.searchUser);
+router.get('/getusers',protect, UsersFuctions.getUsers);
 module.exports = router;
