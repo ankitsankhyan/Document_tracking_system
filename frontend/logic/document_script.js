@@ -40,10 +40,10 @@ verApr.addEventListener('click', async () => {
         },
       });
       if (response.ok) {
-        showPopup('Approval of document has been verified!');
+        notifyGood('Approval of document has been verified!');
       }
       else{
-        showPopup('Approval of document is not correct!');
+        notifyError('Approval of document is not correct!');
       }
     }); 
 
@@ -58,10 +58,10 @@ verApr.addEventListener('click', async () => {
       });
       if (response.ok) {
         console.log(response.data);
-        showPopup('Signatures of document has been verified!');
+        notifyGood('Signatures of document has been verified!');
       }
       else{
-        showPopup('Signatures of document are not correct!');
+        notifyError('Signatures of document are not correct!');
       }
   
     });
@@ -102,12 +102,12 @@ submitButton.addEventListener('click', async () => {
         // Handle error if the request was not successful
         throw new Error('Failed to submit signature');
       }
-      showPopup('Signature done successfully!');
+      notifyGood('Signature done successfully!');
       // Handle the successful response
       // ...
     } catch (error) {
       console.error(error);
-      showPopup('Wrong Signature!');
+      notifyError('Wrong Signature!');
       // Handle error
     }
   } else {
@@ -116,16 +116,7 @@ submitButton.addEventListener('click', async () => {
   }
 });
 
-function showPopup(message) {
-  var popup = document.createElement('div');
-  popup.className = 'popup';
-  popup.textContent = message;
-  document.body.appendChild(popup);
 
-  setTimeout(function() {
-    popup.remove();
-  }, 2000);
-}
 
 // Function to read the content of a file
 function readFileContent(file) {
@@ -186,7 +177,7 @@ submit1Button.addEventListener('click', async () => {
         // Handle error if the request was not successful
         throw new Error('Failed to submit signature');
       }
-      showPopup('Approval done successfully!');
+      notifyGood('Approval done successfully!');
 
       // Handle the successful response
       // ...
@@ -195,7 +186,7 @@ submit1Button.addEventListener('click', async () => {
       // Handle error
     }
   } else {
-    showPopup('Wrong Signature!');
+    notifyError('Wrong Signature!');
     console.error('No file selected');
     // Handle error
   }
@@ -473,11 +464,7 @@ const get_document = (token,doc_id)=>{
       });
 
       console.log(JSON.parse(localStorage.getItem('responseData')).email);
-      // if(data.approved)
-      // {
-      //   showPopup('This document has been approved!');
-
-      // }
+    
       if (JSON.parse(localStorage.getItem('responseData')).email === data.to.email) {
         console.log("hellya");
         document.getElementById('appro').style.display = 'flex';

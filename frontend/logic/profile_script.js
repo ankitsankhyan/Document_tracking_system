@@ -6,26 +6,6 @@ isLogin();
 
 
 const searchDoc = document.getElementById('searchInput');
-// const getAccess = (element)=>{
-//   const doc_id = element.target.getAttribute('doc_id');
-//   const token = JSON.parse(localStorage.getItem('responseData')).token;
-//   fetch(`http://localhost:8000/api/document/accessDoc${doc_id}`, {
-//     mode: 'cors',
-//     method: 'GET',
-//     headers: {
-//       'authorization': `Bearer ${token}`,
-//       'Content-Type': 'application/json'
-//     }
-//   }).then(response => {
-//     if (response.ok) {
-//       window.location.assign(`../sources/document.html?doc_id=${doc_id}`);
-//     } else {
-//       showPopup('you are not authorised to this document');
-//       throw new Error('Could not get document');
-//     }
-//   })
- 
-// }
 const getProfile = (element)=>{
   alert('working');
   const user_id = element.target.getAttribute('user_id');
@@ -118,9 +98,29 @@ window.addEventListener("click", (event) => {
 (function() {
   const token = JSON.parse(localStorage.getItem('responseData')).token;
   const form = document.getElementById('user-form');
+  const nameInput = document.getElementById('name');
+  const passwordInput = document.getElementById('password');
+  const designationInput = document.getElementById('designation');
+  const sectionInput = document.getElementById('section');
+  const emailInput = document.getElementById('email');
+  const photoInput = document.getElementById('photo');
+
+  // Retrieve data from local storage
+  const userData = JSON.parse(localStorage.getItem('responseData'));
+
+  // Pre-fill form fields with data
+  nameInput.value = userData.name;
+  passwordInput.value = ''; // Password field should not be pre-filled for security reasons
+  designationInput.value = userData.designation;
+  sectionInput.value = userData.section;
+  emailInput.value = userData.email;
+  sectionInput.disabled = true;
+  emailInput.disabled = true;
   form.addEventListener('submit', function(e) {
   e.preventDefault();
   const payload = new FormData(form);
+  payload.append('section', sectionInput.value);
+  payload.append('email', emailInput.value);
   console.log(payload);
   fetch('http://localhost:8000/api/user/updateCredentials', {
   method: 'POST',
@@ -135,16 +135,11 @@ window.addEventListener("click", (event) => {
   const updatedData = data?data.data:null;
   console.log(updatedData);
   if(updatedData) {
-   
-         updatedData.token = token;
+      updatedData.token = token;
       localStorage.removeItem('responseData');
-
         localStorage.setItem('responseData', JSON.stringify(updatedData));
+        console.log("sadgsadgsdgsgsg");
       updataCredential(updatedData);
-       showPopup('Your data has been updated!');
-
-
- 
   }})
 
   })
@@ -175,22 +170,13 @@ function updataCredential(data) {
   console.log(user_depart);
   
     document.getElementById('usr_depr').innerHTML= user_depart; // Update the user department on the webpage
- 
   document.getElementById('usr_name').innerHTML = user_name; // Update the user name on the webpage
-  // document.getElementById('usr_depr') = user_depart; // Update the user department on the webpage
   document.getElementById('usr_sec').innerHTML= user_sect; // Update the user section on the webpage
+  notifyGood("Your data has been updated!");
 
 }
 
-function showPopup(message) {
-  var popup = document.createElement('div');
-  popup.className = 'popup';
-  popup.textContent = message;
-  document.body.appendChild(popup);
 
-  setTimeout(function() {
-    popup.remove();
-  }, 2000);}
 
 ////////////////////////////////////////////////////////////////
 

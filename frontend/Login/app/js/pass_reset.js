@@ -1,12 +1,4 @@
-function showPopup(message) {
-  console.log(message, 'inside popup');
-  var popup = document.createElement('div');
-  popup.className = 'popup';
-  popup.textContent = message;
-  document.body.appendChild(popup);
-  setTimeout(function() {
-    popup.remove();
-  }, 800);}
+
 
 function validateForm() {
     var newPassword = document.getElementById("newPassword").value;
@@ -30,7 +22,7 @@ function validateForm() {
     const password = newPassword.value;
   
     if(password !== confirmPassword.value){
-      showPopup("Password does not match");
+      notifyError("Password does not match");
       return;
     }
     const queryString = window.location.search;
@@ -58,7 +50,7 @@ function validateForm() {
   }).then(data => {
     console.log(data);
     if(data.message){
-      showPopup(data.message);
+      notifyGood(data.message);
       window.location.replace("index.html");
     } 
   });
@@ -87,7 +79,7 @@ function validateForm() {
     if (response.ok) {
       return response.json();
     }else{
-      showPopup("Link is invalid");
+      notifyError("Link is invalid");
       setTimeout(function() {
 
       window.location.replace("index.html");
@@ -98,7 +90,7 @@ function validateForm() {
     const received = data;
     console.log(received.message);
     
-    showPopup(received.message);
+    notifyGood(received.message);
   })
   
     // if(data)

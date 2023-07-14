@@ -539,7 +539,7 @@ body.modal-open {
   }
 
   .whole-section {
-    margin-left: 8rem;
+    margin-left: 7rem;
   }
 
   .document-section {
@@ -585,33 +585,45 @@ body.modal-open {
   }
   .about{
     gap:8rem;
-    margin-left:0;
   }
   ul{
     padding:2rem;
   }
   .things{
     width:75%;
+    background: linear-gradient(rgba(246, 221, 221, 0.2), rgba(246, 221, 221, 0.08)) !important
   }
   .things-doc{
     margin-left:1rem;
   }
-
+  .heading{
+    margin-left: -2rem;
+  }
 }
 
 /* 400px */
 @media screen and (max-width: 600px) {
   /* ... previous styles ... */
 
-  
+  .list{
+    margin-left: -2rem;
+    font-size: 1.6rem;
+  }
+  .spanned{
+    font-size:1.6rem;
+  }
 .about{
   display:block;
+  margin-top: -1rem;
+  margin-bottom: -1rem;
 }
 
   .dp {
     display:none;
   }
-
+  .title .usr_name{
+    font-size: 1.8rem;
+  }
   
 }
 
@@ -633,7 +645,7 @@ body.modal-open {
   backdrop-filter: blur(10px); 
 }
 .things-doc{
-  margin-left:1rem;
+  margin-left:-.5rem;
 }
   .dp {
     display:none;

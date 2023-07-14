@@ -415,7 +415,7 @@ body.modal-open {
   }
 
   .whole-section {
-    margin-left: 8rem;
+    margin-left: 6rem;
   }
 
   .document-section {
@@ -469,7 +469,7 @@ body.modal-open {
   }
 
   .whole-section {
-    margin-left: 8rem;
+    margin-left: 4rem;
   }
 
   .document-section {
@@ -487,6 +487,15 @@ body.modal-open {
   }
 
   .title {
-    font-size: 1.2rem;
+    font-size: 2.4rem;
+  }
+  button{
+    padding: -.5rem;
+    font-size: 1.4rem;
+    width: 10rem;
+    height: 4rem;
+  }
+  .sec_title{
+    font-size: 1.8rem;
   }
 }

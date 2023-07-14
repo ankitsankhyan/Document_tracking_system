@@ -1,3 +1,4 @@
+
 const isLogin = ()=>{
   if(!localStorage.getItem('responseData')){
        window.location.assign('../Login/index.html');
@@ -5,11 +6,13 @@ const isLogin = ()=>{
 }
 
 isLogin();
+
 const handleLogout = () => {
   console.log('running');
   localStorage.removeItem('responseData');
   isLogin();
 }
+
 
 const logout = document.getElementById('logout');
 console.log(logout);
@@ -143,20 +146,6 @@ window.addEventListener("click", (event) => {
   }
 });
 
-// const userForm = document.querySelector(".user-form");
-
-// userForm.addEventListener("submit", (event) => {
-//   event.preventDefault(); 
-
-//   const formData = new FormData(userForm);
-//   console.log(formData);
-
-
-//   for(item of formData)
-//   {
-//     console.log(item[0],item[1]);
-//     console.log("hello");
-//   }
 
 (function() {
   const form = document.getElementById('user-form');
@@ -169,45 +158,17 @@ window.addEventListener("click", (event) => {
   body: payload,
   })
   .then(res => {
+    if(!res.ok){
+      notifyError("User not created, please try again!");
+    }
     res.json()})
-  .then(data => console.log(data))
+  .then(data => {
+    notifyGood("User created successfully!");
+  })
   })
   })()
 
-  // const name = document.getElementById("name").value;
-  // const password = document.getElementById("password").value;
-  // const designation = document.getElementById("designation").value;
-  // const section = document.getElementById("section").value;
-  // const email = document.getElementById("email").value;
-  // const photo = document.getElementById("photo").files[0];
-  // console.log("Setting");
-  // console.log("name", name, password, designation, section, email, photo);
 
-  // formData.append("name", name);
-  // formData.append("password", password);
-  // formData.append("designation", designation);
-  // formData.append("section", section);
-  // formData.append("email", email);
-  // formData.append("photo", photo, photo.name);
-
-  // fetch("http://localhost:8000/api/user/createUser", {
-  //   method: "POST",
-  //   mode: 'cors',
-  //   // headers: {
-  //   //   'Content-Type':'application/json'},
-  //   body: formData
-  // })
-  //   .then((response) => {response.json()
-  //     console.log(response, "response here");
-  //   })
-  //   .then((data) => {
-  //     console.log(data);
-  //     // Optionally, perform any necessary actions after form submission
-  //   })
-  //   .catch((error) => {
-  //     console.error("Error:", error);
-  //   });
-// });
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -248,7 +209,11 @@ change_pass.addEventListener('submit', (e) => {
     newPassword: newPassword,
     confirmNewPassword: confirmNewPassword
   };
-  console.log(payload)
+  if(confirmNewPassword!=newPassword)
+  {
+    notifyError("New password & confirm password should be same!")
+    return;
+  }
   fetch("http://localhost:8000/api/user/changePassword", {
     method: "PATCH",
     mode:'cors',
@@ -261,11 +226,11 @@ change_pass.addEventListener('submit', (e) => {
     .then(response => {
       console.log(response.data);
       if (response.ok) {
-        console.log("Password changed successfully!");
+        notifyGood("Password changed successfully!");
         modals.style.display = "none";
         return response.json();
       } else {
-        console.log("Password change failed.");
+        notifyError("Password change failed! Type correct password");
       }
     }).then(
       response=>{
@@ -276,3 +241,5 @@ change_pass.addEventListener('submit', (e) => {
       console.error("Error:", error);
     });
 });
+
+// import { notifyGood, notifyError } from './test.js';

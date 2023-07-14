@@ -19,7 +19,7 @@ const getAccess = (element)=>{
     if (response.ok) {
       window.location.assign(`../sources/document.html?doc_id=${doc_id}`);
     } else {
-      showPopup('you are not authorised to this document');
+      notifyError('Not authorised to see this document');
       throw new Error('Could not get document');
     }
   })
@@ -280,7 +280,7 @@ const get_requested_documents = async (token) => {
   }).then(data => {
     const { data1 } = data;
     const listContainer = document.querySelector('.list-container');
-    listContainer.innerHTML = ''; // Clear the existing content before adding new cards
+    listContainer.innerHTML = ''; 
      
     data1.forEach((item) => {
       const doc_id = item.document_id._id;
@@ -328,9 +328,10 @@ function rem_req() {
           if (response.ok) {
                       return response.json();
                     } else {
+                      notifyError('Request accepted Successfully');
                       throw new Error('Already assigned');
                     }}).then(() => {
-                      showPopup('Request accepted Successfully');
+                      notifyGood('Request accepted Successfully');
                       setTimeout(function() {
                         location.reload();
                       }, 800);
@@ -340,14 +341,6 @@ function rem_req() {
   });
 }
 
-function showPopup(message) {
-  var popup = document.createElement('div');
-  popup.className = 'popup';
-  popup.textContent = message;
-  document.body.appendChild(popup);
-  setTimeout(function() {
-    popup.remove();
-  }, 800);}
 
 const designation = JSON.parse(localStorage.getItem('responseData')).designation;
 if (designation === 'Dispatcher') {

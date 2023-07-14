@@ -123,7 +123,7 @@ document.addEventListener('DOMContentLoaded', function() {
       })
       .then(function(responseData) {
         // Document creation successful
-        showPopup('Congratulation! Your document is created');
+        notifyGood('Document created successfully!');
         console.log(responseData);
         // Reset form fields
         titleInput.value = '';
@@ -132,6 +132,7 @@ document.addEventListener('DOMContentLoaded', function() {
         descriptionInput.value = '';
       })
       .catch(function(error) {
+        notifyError('Document is not created!');
         console.error(error.message);
       });
   });

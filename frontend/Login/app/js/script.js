@@ -35,6 +35,9 @@ function sendLoginData(loginData) {
     console.log(response);
     if (response.ok) {
       return response.json();
+    }
+    else{
+      notifyError("Invallid Credentials!");
     } 
   })
   .then(data => {
@@ -87,16 +90,8 @@ submitForgetEmail.addEventListener('click', function(e) {
   }).then(data => {
     console.log(data);
     if(data.message){
-      showPopup(data.message);
+      notifyError(data.message);
     }
   }
   );
 });
-function showPopup(message) {
-  var popup = document.createElement('div');
-  popup.className = 'popup';
-  popup.textContent = message;
-  document.body.appendChild(popup);
-  setTimeout(function() {
-    popup.remove();
-  }, 800);}

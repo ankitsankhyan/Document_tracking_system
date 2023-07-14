@@ -4,6 +4,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
   <link rel="stylesheet" href="dashboard_styles.css">
+  <link rel="stylesheet" href="test.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
@@ -90,7 +91,9 @@
     </section>
     
   </section>
-  <div class="popup hidden">Request accepted Successfully.</div>
+  <div id="notifications-ramm"></div>
+  <script src="../logic/test.js"> </script>
+
   <script src="../logic/dashboard_script.js"></script>
   <script>
     const handleLogout = () => {
@@ -104,6 +107,7 @@
     console.log(logout);
     logout.addEventListener('click', handleLogout);
   </script>
+
  
 
 </body>
