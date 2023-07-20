@@ -5,7 +5,7 @@ function checkLogin(){
   const data = localStorage.getItem('responseData');
   console.log(data);
   if(data){
-    window.location.assign('../../../../sources/dashboard.html');
+    window.location.assign('../../../../Frontend/sources/dashboard.html');
   }
   
 }

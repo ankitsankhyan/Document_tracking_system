@@ -245,7 +245,14 @@ module.exports.searchDoc = async (req, res) => {
   console.log(keywords);
   try {
     var alldocs = [];
+    const documents = await Document.find({ 
+      $or: [
+        { title: { $regex: query, $options: 'i' } },
+        { section: { $regex: query, $options: 'i' }}
+      ],
+    }).populate('createdBy').select('title section createdBy');
 
+    allDocs = documents;
     for (const keyword of keywords) {
       const documents = await Document.find({ 
         $or: [
