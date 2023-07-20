@@ -8,7 +8,9 @@ const {generateRandomBytes} = require("../utils/helper");
 const PasswordResetToken = require("../Model/passwordResetToken");
 const { generateMailTransporter } = require("../utils/mail");
 const passwordResetToken = require("../Model/passwordResetToken");
+const {client} = require('../middleware/caching');
 const cloudinary = require("../cloud/index");
+const { json } = require("body-parser");
 module.exports.createUser = async (req, res) => {
     // base64 encoded image data
     // console.log(req.body, '(((((((())))))))))');
@@ -379,6 +381,7 @@ module.exports.getUsers = async(req,res)=>{
 module.exports.searchUser = async(req,res)=>{
  const keyword = req.params.keyword;
  console.log(keyword);
+ 
   const users = await User.find(
    {
     $or: [
@@ -390,9 +393,13 @@ module.exports.searchUser = async(req,res)=>{
     ]
    }
   ).select('name avatar');
+ 
 
-  res.status(200).json({
+ client.set(keyword,JSON.stringify(users));
+ console.log('this is new request');
+ res.status(200).json({
     data : users
   })
+  return;
 }
 
