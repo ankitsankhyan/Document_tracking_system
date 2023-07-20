@@ -3,6 +3,7 @@ const router = express.Router();
 const {protect} = require('../middleware/authenticaion')
 const document_controller = require('../controller/document_controller');
 const tags = require('../controller/tag');
+const {redisDocMiddleware} = require('../middleware/caching');
 
 //######################################## related to document ########################################
 router.post('/create',protect,document_controller.createdoc);
@@ -20,7 +21,7 @@ router.patch('/deleteapproval:id',protect,document_controller.removeApproval);
 router.get('/verifyapproval:id',protect,document_controller.verifyapproval);
 router.patch('/signature:id',protect,document_controller.signature);
 router.get('/verifySignatures:id',protect,document_controller.verifySignature);
-router.get('/search:keyword',document_controller.searchDoc);
+router.get('/search:keyword',protect,redisDocMiddleware,document_controller.searchDoc);
 
 
 //######################################## related to tags ########################################

@@ -379,7 +379,8 @@ module.exports.getUsers = async(req,res)=>{
 }
 
 module.exports.searchUser = async(req,res)=>{
- const keyword = req.params.keyword;
+ let keyword = req.params.keyword;
+ keyword = keyword.trim();
  console.log(keyword);
  
   const users = await User.find(
@@ -393,7 +394,7 @@ module.exports.searchUser = async(req,res)=>{
     ]
    }
   ).select('name avatar');
- 
+  keyword = 'user_' + keyword;
 
  client.set(keyword,JSON.stringify(users));
  console.log('this is new request');

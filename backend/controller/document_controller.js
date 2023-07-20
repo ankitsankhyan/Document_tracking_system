@@ -7,7 +7,7 @@ const Document = require("../Model/document");
 const { request } = require("express");
 const { isValidObjectId } = require('mongoose');
 const { all } = require('../router');
-
+const {client} = require('../middleware/caching');
 
 
 // ##############################################document funtions#####################################################
@@ -269,8 +269,9 @@ module.exports.searchDoc = async (req, res) => {
         }
       }
     }
- 
-  
+  query = 'doc_' + query;
+  client.set(query, JSON.stringify(alldocs));
+  console.log('new request');
 
     res.status(200).json({
       data: alldocs
