@@ -202,4 +202,4 @@ Note: Make sure to replace "http://localhost:8000" with the appropriate base URL
 
 ## Conclusion
 
-Doctrak simplifies the process of document creation, tracking, and handling by efficiently utilizing Node.js, RSA for digital signatures, Redis for caching, and Node.js cluster for multicore utilization. The system offers a secure and seamless experience for users to manage their documents and ensure they reach the responsible authorities in a timely manner.
+Doctrak simplifies the process of document creation, tracking, and handling by efficiently utilizing Node.js, RSA for digital signatures, Redis for caching, and Node.js cluster for multicore utilization. The system offers a secure and seamless experience for users to manage their documents and ensure they can track these documents with ease.
