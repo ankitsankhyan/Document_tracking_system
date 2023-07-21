@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
+
 const user = new mongoose.Schema(
   {
     name: {
@@ -32,7 +33,18 @@ const user = new mongoose.Schema(
     hasPrivateKey: {
       type: Boolean,
       default: false,
-    }
+    },
+    
+    avatar:{
+      type:Object,
+      url:String,
+      public_id:String,
+      default:{
+        publicId:null,
+        url:"https://cdn.vectorstock.com/i/1000x1000/32/12/default-avatar-profile-icon-vector-39013212.webp"
+      }
+
+  }
 
   },
   {

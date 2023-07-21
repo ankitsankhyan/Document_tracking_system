@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="dashboard_styles.css">
+  <link rel="stylesheet" href="test.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&family=Roboto:ital,wght@0,100;1,300&family=Rubik:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+</head>
+
+<body>
+  <!-- onload="showDashboard()" -->
+  <header class="header">
+    <div class="navbar">
+      <div class="logo"><img src="../img/logo.JPG" class="logo-img" /></div>
+      <div class="company-name">Doctrac</div>
+      <div class="search-bar">
+        <!-- <input type="text" id="searchInput" placeholder="Search Documents" /> -->
+        <input type="text" id="searchInput" placeholder="Search Documents"  />
+      </div>
+    </div>
+  </header>
+
+  <section class="main">
+    <div class="sidebar-list">
+      <ul class="sidebar">
+        <li>
+          <a href="dashboard.html">
+            <img class="side-img" src="../img/layout.png" alt="dashboard" />
+          </a>
+        </li>
+        <li>
+          <a href="profile.html">
+            <img class="side-img" src="../img/profile.png" alt="profile" />
+          </a>
+        </li>
+        <li>
+          <a href="create.html">
+            <img class="side-img" src="../img/plus.png" alt="create" />
+          </a>
+        </li>
+        <li>
+          <a href="setting.html">
+            <img class="side-img" src="../img/cogwheel.png" alt="setting" />
+          </a>
+        </li>
+        <li>
+          <p id="logout">
+            <img class="side-img" src="../img/logout.png" alt="logout" />
+          </p>
+        </li>
+      </ul>
+    </div>
+    <div id="searchContainer">
+      <!-- search result are printed here -->
+    </div>
+    <section class="whole-section">
+      <div class="document-section">
+        <h1 class="title">
+          Tagged Documents
+        </h1>
+        <div class="scrollable-container">
+          <div class="tagged-doc" id="tagged-documents"></div>
+        </div>
+    
+        <h1 class="title">
+          Created Documents
+        </h1>
+        <div class="scrollable-container">
+          <div class="created-doc" id="created-documents"></div>
+        </div>
+      </div>
+    
+      <div class="forwarded-documents" id="for-documents">
+        <h1 class="title">
+          Requested
+        </h1>
+        <div class="list-container">
+          <!-- <a href="https://example.com" target="_blank" class="list-item">
+            <div>
+              <h3 class="doc-title">Document 1</h3>
+              <p class="author-name">Author</p>
+            </div>
+          </a> -->
+        </div>
+      </div>
+    </section>
+    
+  </section>
+  <div id="notifications-ramm"></div>
+  <script src="../logic/test.js"> </script>
+
+  <script src="../logic/dashboard_script.js"></script>
+  <script>
+    const handleLogout = () => {
+      console.log('running');
+
+      localStorage.removeItem('responseData');
+      console.log(isLogin);
+      isLogin();
+    }
+    const logout = document.getElementById('logout');
+    console.log(logout);
+    logout.addEventListener('click', handleLogout);
+  </script>
+
+ 
+
+</body>
+
+</html>
+
+</html>

@@ -1,12 +1,13 @@
 const Assigned = require('../Model/assigned');
-const Tag  = require("../Model/Tag");
+const Tag  = require("../Model/tag");
 const User = require("../Model/user.js");
 const rsa = require('node-rsa');
 const Authorise = require('../Model/authorize');
 const Document = require("../Model/document");
 const { request } = require("express");
 const { isValidObjectId } = require('mongoose');
-
+const { all } = require('../router');
+const {client} = require('../middleware/caching');
 
 
 // ##############################################document funtions#####################################################
@@ -238,23 +239,45 @@ module.exports.signature = async (req,res)=>{
 };
 
 module.exports.searchDoc = async (req, res) => {
-  const keyword = req.params.id;
-  const section = req.user.section;
+  var query = req.params.keyword;
+  query = query.trim();
+  const keywords = query.split(' ');
+  console.log(keywords);
   try {
+    var alldocs = [];
     const documents = await Document.find({ 
       $or: [
-        { title: { $regex: keyword, $options: 'i' } },
-        { description: { $regex: keyword, $options: 'i' },
-      }
+        { title: { $regex: query, $options: 'i' } },
+        { section: { $regex: query, $options: 'i' }}
       ],
-      section:section
-    });
+    }).populate('createdBy').select('title section createdBy');
 
+    allDocs = documents;
+    for (const keyword of keywords) {
+      const documents = await Document.find({ 
+        $or: [
+          { title: { $regex: keyword, $options: 'i' } },
+          { section: { $regex: keyword, $options: 'i' }}
+        ],
+      }).populate('createdBy').select('title section createdBy');
+
+      for (const doc of documents) {
+        const isDuplicate = alldocs.some(existingDoc => existingDoc._id.toString() === doc._id.toString());
+    
+        if (!isDuplicate) {
+          alldocs.push(doc);
+        }
+      }
+    }
+  query = 'doc_' + query;
+  client.set(query, JSON.stringify(alldocs));
+  console.log('new request');
 
     res.status(200).json({
-      data: documents
+      data: alldocs
     });
   } catch (error) {
+    console.log(error);
     res.status(500).json({
       message: 'An error occurred while searching for documents.'
     });
@@ -265,17 +288,23 @@ module.exports.getAccessDoc = async (req,res)=>{
   console.log(req.user);
   const doc_id = req.params.id;
   const user_id = req.user.id;
+  
   const authorise = await Authorise.findOne({document_id:doc_id,user_id:user_id});
- 
+  if(!authorise){
+    res.status(400).json({
+      message:'you are not authorised to view this document'
+    });
+    return;
+  }
 
   const doc = await Document.findById(doc_id).populate('createdBy','name email');
   console.log(authorise);
-  // if(doc.section === req.user.section){
-  //   res.status(200).json({
-  //     data:doc
-  //   })
-  //   return;
-  // }
+  if(doc.section==='public' || doc.section === req.user.section){
+    res.status(200).json({
+      data:doc
+    });
+    return;
+  }
   if(authorise){
     res.status(200).json({
       data:doc
@@ -460,7 +489,9 @@ module.exports.verifyapproval = async (req,res)=>{
 
 module.exports.verifySignature = async (req,res)=>{
         const id = req.params.id;
+
         const doc = await Document.findById(id);
+        console.log(doc,'H\nH\nH\nH\nH');
         if(!doc){
           res.status(400).json({
             message:'doc not found'
@@ -476,12 +507,9 @@ module.exports.verifySignature = async (req,res)=>{
             try{
             const decrypted = public_key.decryptPublic(signatures[i].signature,'utf8');
               
-            }catch(e){
-              res.status(400).json({
-                message:'Signature is not Authentic for ' + signatures[i].email
-              });
-              return;
-            }
+           
+         
+            
 
             if(decrypted !== signatures[i].email){
               res.status(400).json({
@@ -489,6 +517,13 @@ module.exports.verifySignature = async (req,res)=>{
               });
               return;
             }
+          }catch(e){
+                 console.log(e);
+                 res.status(400).json({
+                  message:'Signature is not Authentic for ' + signatures[i].email
+                });
+                return;
+          }
           
         }
 

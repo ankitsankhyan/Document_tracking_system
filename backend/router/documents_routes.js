@@ -3,11 +3,8 @@ const router = express.Router();
 const {protect} = require('../middleware/authenticaion')
 const document_controller = require('../controller/document_controller');
 const tags = require('../controller/tag');
-router.get('/', function(req, res) {
-    res.status(200).json({
-        message:'working fine',
-    });
-});
+const {redisDocMiddleware} = require('../middleware/caching');
+
 //######################################## related to document ########################################
 router.post('/create',protect,document_controller.createdoc);
 router.get('/show_created_doc', protect,document_controller.created_docs);
@@ -24,7 +21,7 @@ router.patch('/deleteapproval:id',protect,document_controller.removeApproval);
 router.get('/verifyapproval:id',protect,document_controller.verifyapproval);
 router.patch('/signature:id',protect,document_controller.signature);
 router.get('/verifySignatures:id',protect,document_controller.verifySignature);
-router.get('/search/:id',document_controller.searchDoc);
+router.get('/search:keyword',protect,redisDocMiddleware,document_controller.searchDoc);
 
 
 //######################################## related to tags ########################################
@@ -33,6 +30,7 @@ router.post('/newTag',protect,tags.addTag);
 router.patch('/done:id', protect, tags.mark_as_done);
 router.delete('/delete_tag',protect,tags.delete_tag);
 router.get('/tagged_doc',protect,document_controller.tagged_docs);
+router.get('/get_tags:id',protect,tags.getTags);
 
 
 

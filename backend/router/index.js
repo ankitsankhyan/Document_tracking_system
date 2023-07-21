@@ -9,6 +9,7 @@ router.get('/api', function(req, res){
   res.send('Hello World');
 })
 router.get('/', function(req, res) {
+  console.log('working'); 
     res.status(200).json({
         message:'working fine',
 

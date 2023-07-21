@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const User = require("../Model/user");
 
-
+// sudo su
 const protect = async(req, res, next) => {
   
   let token;
@@ -10,8 +10,8 @@ const protect = async(req, res, next) => {
     req.headers.authorization &&
     req.headers.authorization.startsWith("Bearer")
   ) {
+      console.log(req.body, 'inside middleware of auth');
    
-    
       token = req.headers.authorization.split(" ")[1];
       console.log(token, 'after');
       if(!token){

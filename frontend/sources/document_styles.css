@@ -1,0 +1,647 @@
+* {
+  margin: 0;
+}
+html {
+  background-color: #121b2f;
+  font-size: 62.5%;
+  font-family: 'Poppins', sans-serif;
+  color: #fff;
+}
+.head {
+  display: flex;
+  background-color: #102548;
+  border-radius: 1.2rem;
+  justify-content: space-between;
+  margin: 2rem 3.6rem;
+}
+.title {
+  padding: 2rem;
+  font-size: 2.4rem;
+}
+.project-name {
+  padding: 0 2rem;
+  margin-bottom: 1rem;
+  max-width: 30rem;
+  font-size: 1.6rem;
+  overflow: hidden;
+text-overflow: ellipsis;
+display: -webkit-box;
+-webkit-line-clamp: 1;
+-webkit-box-orient: vertical;
+}
+
+.checks {
+  display: flex;
+  justify-content: space-between;
+  margin: -0.5rem 6rem;
+}
+
+.checkmark {
+  padding: 2rem 2rem;
+  margin-bottom: 2.4rem;
+  max-width: 20rem;
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.on-doc {
+  font-size: 2rem;
+  margin-right: 1rem;
+}
+
+.check {
+  margin-left: 1rem;
+  transform: scale(1.5);
+}
+.sign-done, .sign-ver-app{
+  display: flex;
+  align-items: center;
+  margin-left: 1rem;
+}
+
+#sign-button {
+  padding: 10px 20px;
+  height: 4rem;
+  background-color: #45a049;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#sign-button3,#sign-button4 {
+  margin-top: 8rem;
+  margin-bottom: 4rem;
+  margin-left: 3rem;
+  padding: 10px 20px;
+  height: 4rem;
+  background-color: #45a049;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+#sign-button3{
+  margin-top: 2rem;
+}
+#sig {
+  padding: 10px;
+  width: 40rem; 
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+ 
+
+
+.do-desc {
+  font-size: 2.4em;
+  padding-left: 1.5rem;
+  margin-bottom: 2rem;
+  font-weight: 300;
+  margin-left: 3.6rem;
+}
+
+.main-doc-des {
+  border-radius: 8px;
+  background: linear-gradient(
+    rgba(246, 221, 221, 0.2),
+    rgba(246, 221, 221, 0.08)
+  );
+  backdrop-filter: blur(10px);
+  padding-top: 1rem;
+  padding-left: 1rem;
+  margin-left: 0rem;
+  width: 85%;
+  margin-left: 10rem;
+  margin-bottom: 3rem;
+}
+
+.para-desc {
+  font-size: 1.6rem;
+  padding: 3rem;
+  line-height: 2.4rem;
+  word-wrap: break-word;
+}
+
+
+.timeline {
+  list-style-type: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.li {
+  transition: all 200ms ease-in;
+}
+
+.timestamp {
+  margin-bottom: 20px;
+  padding: 0px 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-weight: 100;
+}
+
+.status {
+  padding: 0px 40px;
+  display: flex;
+  justify-content: center;
+  border-top: 2px solid #d6dce0;
+  position: relative;
+  transition: all 200ms ease-in;
+}
+
+.status h4 {
+  font-weight: 600;
+  margin-top: 1.5rem;
+}
+
+.status:before {
+  content: '';
+  width: 25px;
+  height: 25px;
+  background-color: white;
+  border-radius: 25px;
+  border: 1px solid #ddd;
+  position: absolute;
+  top: -15px;
+  left: 42%;
+  transition: all 200ms ease-in;
+}
+
+.li.complete .status {
+  border-top: 2px solid #66dc71;
+}
+
+.li.complete .status:before {
+  background-color: #66dc71;
+  border: none;
+  transition: all 200ms ease-in;
+}
+
+.li.complete .status h4 {
+  color: #66dc71;
+}
+
+/* Form Styles */
+#add-entry-form {
+  display: flex;
+  border: none;
+  color: #fff;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+}
+
+#add-entry-form input[type='text'] {
+  padding: 10px;
+  background-color: rgba(255, 255, 255, 0.1);
+  margin-bottom: 10px;
+
+  color: #fff;
+  border-radius: 4px;
+  border: none;
+
+  width: 300px;
+}
+
+#add-entry-form button[type='submit'] {
+  padding: 10px 20px;
+  margin-bottom: 2rem;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+#add-entry-form button[type='submit']:hover {
+  background-color: #45a049;
+}
+
+select {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  padding: 8px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  appearance: none;
+  background-color: #f1f1f1;
+}
+
+select:focus {
+  outline: none;
+  border-color: #5b9dd9;
+}
+
+select option {
+  padding: 6px;
+  background-color: #f1f1f1;
+}
+
+#add-entry-form {
+  text-align: center;
+}
+
+.timeline {
+  text-align: center;
+}
+
+
+.checks {
+  display: flex;
+  justify-content: space-between;
+  margin: -0.5rem 6rem;
+}
+
+.checkmark {
+  padding: 2rem 2rem;
+  margin-bottom: 2.4rem;
+  max-width: 40rem;
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.on-doc {
+  font-size: 2rem;
+  margin-right: 1rem;
+}
+
+.check {
+  margin-left: 1rem;
+  transform: scale(1.5);
+}
+
+.sign-done {
+  display: flex;
+  align-items: center;
+  margin-left: 1rem;
+
+}
+
+#sign-button1,
+#sign-button2 {
+  padding: 10px 20px;
+  height: 4rem;
+  background-color: #45a049;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-right: 5rem;
+}
+
+#sig1,
+#sig2 {
+  padding: 10px;
+  width: 30rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.tag-add-btn{
+  display: flex;
+  justify-content: center;}
+
+
+  .popup {
+    position: fixed;
+    height: 16rem;
+    font-size: 2rem;
+    color: rgb(11, 26, 39);
+    width: 26rem;
+    top: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(to bottom right, #34b7ce, #0b5b6a);
+    padding: 10px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    opacity: 1; 
+  }
+
+    .flexing {
+      display: flex;
+      /* margin-bottom: 8rem;        */
+    }
+
+  .sub-flexing{
+    margin-left: 5rem;
+    flex:1;
+  }
+  .sign-flex{
+    flex:1;
+    margin-top: 2rem;
+    color: #34b7ce;
+  overflow-y: auto;   
+  max-height: 300px; 
+  }
+
+  .signature{
+    color: #fbfbfb;
+    font-size: 1.6rem;
+    margin-right: 10rem ;
+    margin-bottom: .25rem;
+    border-radius:.5rem; ;
+    background: linear-gradient( rgba(246, 221, 221, 0.2), rgba(246, 221, 221, 0.08) );
+    padding: 1rem;
+  }
+  .sig-head{
+    margin-top:7rem;
+    margin-right: 10rem;
+    font-weight: 300;
+    font-size: 2rem;
+  }
+  .popup.hidden {
+    display: none;
+  }
+  .hellosign{
+    margin-bottom:-6rem;
+  }
+  @keyframes blast {
+    0% {
+      opacity: 0;
+      transform: scale(0);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.2);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+
+ /* Media Queries */
+ /* .signature {
+  padding: 10px;
+  margin-bottom: 10px;
+  background-color: lightgray;
+  border: 1px solid gray;
+} */
+/* 800px */
+@media screen and (max-width: 800px) {
+  .title {
+    font-size: 2rem;
+  }
+
+  .timeline {
+    list-style-type: none;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0;
+  }
+    .date{
+      margin-top:.2rem;
+    }
+  .li {
+    transition: all 200ms ease-in;
+    display: flex;
+    align-items: flex-start;
+    position: relative;
+    margin-left: 40px; 
+  }
+  
+  .li::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 18px; 
+    width: 2px;
+    height: 100%;
+    transform: translateX(-50%);
+    z-index: -1;
+  }
+  
+  .timestamp {
+    margin-bottom: 20px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end; 
+    margin-right: 20px; }
+  
+  .status {
+    padding: 0;
+    display: flex;
+    justify-content: flex-start; 
+    position: relative;
+    transition: all 200ms ease-in;
+  }
+  
+  .status h4 {
+    font-weight: 600;
+    margin-top: 0;
+  
+    margin-left:4rem;
+  }
+  
+  .status:before {
+    content: '';
+    width: 14px; /* Adjust the width of the circle */
+    height: 14px; /* Adjust the height of the circle */
+    background-color: #dca966;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: -8px; /* Adjust the positioning of the circle */
+    transform: translate(-50%, -50%);
+    transition: all 200ms ease-in;
+  }
+  
+  .li.complete .status:before {
+    background-color: #66dc71;
+    transition: all 200ms ease-in;
+    margin-left:2rem;
+  }
+
+  .li.complete .status h4 {
+    color: #66dc71;
+  } 
+  .li.complete .status {
+    border-top: 0;
+  }
+  .project-name {
+    font-size: 1.4rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .checkmark {
+    padding: 2rem 1rem;
+    margin-bottom: 2.4rem;
+  }
+
+  .on-doc {
+    font-size: 1.6rem;
+    margin-right: 0.5rem;
+  }
+  .do-desc{
+    font-size: 1.6rem;
+
+  }
+
+  .sign-done {
+    margin-left: 0.5rem;
+  }
+  .main-doc-des{
+    margin-left:3rem;
+  }
+  #sign-button1,
+  #sign-button2 {
+    margin-right: 1rem;
+  }
+}
+
+/* 600px */
+@media screen and (max-width: 600px) {
+  .title {
+    font-size: 1.6rem;
+  }
+  .checks {
+    flex-direction: column;
+    margin: 0;
+  }
+
+  .signature{
+    margin-left: 2rem;
+    width:16rem;
+    margin-bottom: .25rem;
+  }
+  .flexing{
+    flex-direction: column;
+  }
+
+  .sub-flexing{
+    margin-top: 2rem;;
+    margin-bottom: -3rem;
+  }
+
+  .project-name {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .checkmark {
+    padding: 1.6rem 0.8rem;
+    margin-bottom: 1.6rem;
+  }
+
+  .on-doc {
+    margin-right: 0.3rem;
+  }
+  .do-desc{
+    font-size: 1.4rem;
+
+  }
+
+  .sign-done {
+    margin-left: 0.3rem;
+  }
+
+  #sign-button1,
+  #sign-button2 {
+    margin-right: 0.8rem;
+  }
+}
+
+/* 500px */
+@media screen and (max-width: 500px) {
+  .title {
+    font-size: 1.4rem;
+  }
+
+  .project-name {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .checkmark {
+    padding: 1.2rem 0.6rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .on-doc {
+    font-size: 1.2rem;
+    margin-right: 0.2rem;
+  }
+
+  .sign-done {
+    margin-left: 0.2rem;
+  }
+
+  
+  
+  #sign-button1,
+  #sign-button2 {
+    margin-right: 0.5rem;
+  }
+}
+
+
+@media screen and (max-width: 500px) {
+  .title {
+    font-size: 1.4rem;
+  }
+  .checkmark{
+    width:25rem;
+  }
+  .project-name {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .checkmark {
+    padding: 1.2rem 0.6rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .on-doc {
+    font-size: 1.2rem;
+    margin-right: 0.2rem;
+  }
+
+  .sign-done {
+    margin-left: 0.2rem;
+    
+  }
+
+  #sign-button1,
+  #sign-button2 {
+    margin: 1rem;
+    height:1.6rem;
+    width:3rem;
+    font-size:.8rem;
+  
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    
+  } #sign-button3, 
+  #sign-button4{
+    margin: 1rem;
+    height:3.6rem;
+    width:6rem;
+    font-size:1.2rem;
+    display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+  }
+}
