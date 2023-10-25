@@ -294,7 +294,7 @@ module.exports.generatelink = async (req, res) => {
     userId : user._id,
    
   });
-  const link = `http://127.0.0.1:5500/Login/pass_reset.html?token=${token}&user_id=${user._id}`;
+  const link = `http://127.0.0.1:5500/frontend/Login/pass_reset.html?token=${token}&user_id=${user._id}`;
   try{
     const transporter = generateMailTransporter();
     transporter.sendMail({

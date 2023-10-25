@@ -157,9 +157,12 @@ module.exports.updateDoc = async (req, res) => {
 
 module.exports.signature = async (req,res)=>{
   // implimented by query 
+  console.log('running signature')
   const doc_id = req.params.id;
+  
   var private_key_val = req.body.privateKey;
    private_key_val = private_key_val.trim();
+   console.log(private_key_val);
    if(!isValidObjectId(doc_id)){
     res.status(400).json({
       error:'invalid document id'
@@ -167,21 +170,17 @@ module.exports.signature = async (req,res)=>{
     return;
   }
     const doc = await Document.findById(doc_id);
-  if(doc.to.equals(req.user._id)===true){
-    res.status(400).json({
-      error:'Please do sign in approve section'
-    });
-    return;
-  }
 
 
+
+  console.log('running check 3');
     if(doc.createdBy.equals(req.user._id)===true){
       res.status(400).json({
         error:'you are not authorized to sign this document'
       });
       return;
     }
-
+console.log('running check 2');
 
     if(!doc){
       res.status(400).json({
@@ -209,7 +208,7 @@ module.exports.signature = async (req,res)=>{
         return;
       }
     }
-   
+   console.log('running check 1');
 
     const private_key = new rsa();
     private_key.importKey(private_key_val,'private');
@@ -219,6 +218,7 @@ module.exports.signature = async (req,res)=>{
     public_key.importKey(req.user.publicKey,'public');
     try{
       const decrypted_signature = public_key.decryptPublic(signature,'utf8');
+      console.log(decrypted_signature);
     }catch(e){
       res.status(400).json({
         message:'invalid private key'
@@ -231,6 +231,7 @@ module.exports.signature = async (req,res)=>{
       signature:signature,
       email:req.user.email,
          };
+
     doc.signature.push(signature_obj);
     await doc.save();
     res.status(200).json({
@@ -240,37 +241,23 @@ module.exports.signature = async (req,res)=>{
 
 module.exports.searchDoc = async (req, res) => {
   var query = req.params.keyword;
+  console.log(query);
   query = query.trim();
   const keywords = query.split(' ');
   console.log(keywords);
-  try {
-    var alldocs = [];
-    const documents = await Document.find({ 
-      $or: [
-        { title: { $regex: query, $options: 'i' } },
-        { section: { $regex: query, $options: 'i' }}
-      ],
-    }).populate('createdBy').select('title section createdBy');
-
-    allDocs = documents;
-    for (const keyword of keywords) {
-      const documents = await Document.find({ 
-        $or: [
-          { title: { $regex: keyword, $options: 'i' } },
-          { section: { $regex: keyword, $options: 'i' }}
-        ],
-      }).populate('createdBy').select('title section createdBy');
-
-      for (const doc of documents) {
-        const isDuplicate = alldocs.some(existingDoc => existingDoc._id.toString() === doc._id.toString());
-    
-        if (!isDuplicate) {
-          alldocs.push(doc);
-        }
-      }
-    }
+  try{
+  var alldocs = await Document.find({
+    $or: [
+            { title: { $regex: query, $options: 'i' } },
+            { section: { $regex: query, $options: 'i' }}
+          ],
+  }).populate('createdBy').select('title section createdBy');
+  console.log(alldocs);
+  
+    console.log('running');
   query = 'doc_' + query;
   client.set(query, JSON.stringify(alldocs));
+  client.expire(query,600);
   console.log('new request');
 
     res.status(200).json({
@@ -367,8 +354,9 @@ module.exports.approveDoc = async (req, res) => {
     })
     return;
   }
-  
+  console.log(doc.to,req.user.id);
   if(doc.to.equals(req.user.id)===false){
+    console.log('running');
     res.status(400).json({
       message:'you are not authorised to approve this document'
     });
@@ -502,6 +490,8 @@ module.exports.verifySignature = async (req,res)=>{
 
         for(let i = 0; i < signatures.length; i++){
             const user = await User.findOne({email:signatures[i].email});
+            
+            console.log(user);
             const public_key = new rsa();
             public_key.importKey(user.publicKey,'public');
             try{

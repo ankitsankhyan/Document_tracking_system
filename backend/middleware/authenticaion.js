@@ -3,7 +3,7 @@ const User = require("../Model/user");
 
 // sudo su
 const protect = async(req, res, next) => {
-  
+  console.log('running');
   let token;
   
   if (

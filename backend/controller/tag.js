@@ -350,6 +350,7 @@ module.exports.getTags = async(req, res)=>{
                        });
                        return;
     }
+
     const tags = await Tag.find({document_id:doc_id, tagged_to:req.user.id});
     res.status(200).json({
              data:tags

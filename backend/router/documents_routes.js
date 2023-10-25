@@ -19,9 +19,9 @@ router.put('/update',document_controller.updateDoc);
 router.patch('/approved/',protect ,document_controller.approveDoc);
 router.patch('/deleteapproval:id',protect,document_controller.removeApproval);
 router.get('/verifyapproval:id',protect,document_controller.verifyapproval);
-router.patch('/signature:id',protect,document_controller.signature);
+router.post('/signature:id',protect,document_controller.signature);
 router.get('/verifySignatures:id',protect,document_controller.verifySignature);
-router.get('/search:keyword',protect,redisDocMiddleware,document_controller.searchDoc);
+router.get('/search:keyword',document_controller.searchDoc);
 
 
 //######################################## related to tags ########################################

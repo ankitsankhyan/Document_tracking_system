@@ -5,6 +5,7 @@ const dotenv = require('dotenv');
 require('dotenv').config()
 const routes = require('./router/index');
 const db = require('./config/localdb');
+
 const morgan = require('morgan');
 const cors = require('cors');
 const bodyParser = require('body-parser');
@@ -25,7 +26,7 @@ app.use((err, req, res, next) => {
     }
 });
 app.use('/',routes);
-const port = 8000;
+const port = 3000;
 console.log(process.env.api_key, process.env.api_secret, process.env.cloud_name);
 
 app.listen(port,()=>{

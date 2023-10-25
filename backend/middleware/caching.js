@@ -2,9 +2,10 @@ const redis = require('redis');
 const keys = require('./rediskeys');
 
 const client = redis.createClient({
-    legacyMode: true,
+    host:'redis',
+    port:6379
 });
-client.connect();
+
 
 client.on('ready', ()=> console.log('redis connected'));
 client.on('error', (err)=> console.log('redis error', err));
